@@ -38,6 +38,11 @@ function Ruleset() {
 // Will NOT accept duplicate node names
 // If the insertion was successful, returns true; otherwise returns false
     this.addNode = function(newNodeName="", newNodeImage="") {
+        //first, make sure we aren't adding TOO many nodes...we have a max # that we enforce
+        if(this.allNodes.length>=this.maxNodes) {
+            console.log("Err - exceeding max # of nodes!");
+            return false;
+        }
         //NOTE: we will ignore the search step for nulls, since we may initialize a game full of null items
         if(newNodeName!="") {
             //if there IS a string though, we should make sure we don't already have a node by this name!
@@ -164,7 +169,6 @@ myGame.addNode("lizard", "lizard.jpg");
 myGame.addEdge(1);  //ONE NOTE: right now, we are assuming that we add steps in order; this code would not work beyond that
 myGame.addEdge(-2);  
 myGame.consoleLogAll();
-
 //Example of starting a totally blank game and then just updating the node names/images
 console.log("==============");
 var myGame2 = new Ruleset();
