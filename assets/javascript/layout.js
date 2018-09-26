@@ -52,7 +52,7 @@ function createFields() {
         }
         $(this).css({
             left: x + 'px',
-            top: y +75 + 'px'
+            top: y + 75 + 'px'
         });
         angle += step;
     });
@@ -80,7 +80,7 @@ function createFields() {
 
 // The only reason I chose to do multiple svg layers is to have multiple colors of arrows
     // we may want to put each in a separate div, to make classing easier
-    // each div should have css for position absolute (or relative?), 
+    // each div should have css for position absolute, 
     // and sizing for 100% of it's parent
 // The defs tag contains the info for the arrow heads
     // the only thing that should change for each level is:
