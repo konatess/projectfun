@@ -1,0 +1,23 @@
+html, body {
+    height: 100%;
+    background-image: url("../images/trianglify.svg")
+}
+
+* {
+    /* font-family: 'Raleway', sans-serif; */
+    /* font-family: 'Poppins', sans-serif; */
+    font-family: 'Quicksand', sans-serif;
+    /* font-family: 'Comfortaa', cursive; */
+    /* font-family: 'ABeeZee', sans-serif; */
+    /* font-family: 'Poiret One', cursive; */
+}
+
+header, footer {
+    text-align: center;
+    background-color: #ffffff44;
+}
+
+footer {
+    position: sticky;
+    top: 100%;
+}
