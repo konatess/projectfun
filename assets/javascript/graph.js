@@ -30,7 +30,7 @@ function Node(newName, newImg="") {
 function Ruleset() {
     this.allNodes = []; //array of all the items we have in this particular game 
     this.minNodes = 3; // number of nodes we MUST have in order to make a valid game
-    this.maxNodes = 15; // max number of nodes we can have to make a valid game
+    this.maxNodes = 25; // max number of nodes we can have to make a valid game
 // CREATE METHODS
 // addNode(newNodeName, newNodeImage)
 // Add a brand new node to the Ruleset
