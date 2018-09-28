@@ -6,8 +6,8 @@ function Node(newName, newImg="") {
     //VARIABLES
     this.name = newName;
     this.adjacent = []; //array of references to items that this node beats
-    //verb for the node
-    this.verbs = [];
+/*     //verb for the node
+    this.verbs = []; */
     //image for the node
     this.image = newImg;
     //METHODS
@@ -17,7 +17,7 @@ function Node(newName, newImg="") {
     this.defeats = function(otherNode, newVerb="defeats") {
     //NOTE: we are going to want to think about how we update the verbs
         this.adjacent.push(otherNode);
-        this.verbs.push(newVerb); 
+        /* this.verbs.push(newVerb);  */
     };
     
     //(TO-DO) remove(otherNode) -- removes an association with another node by removing that node from the'defeatsNodes'
@@ -30,7 +30,7 @@ function Node(newName, newImg="") {
 function Ruleset() {
     this.allNodes = []; //array of all the items we have in this particular game 
     this.minNodes = 3; // number of nodes we MUST have in order to make a valid game
-    this.maxNodes = 25; // max number of nodes we can have to make a valid game
+    this.maxNodes = 15; // max number of nodes we can have to make a valid game
 // CREATE METHODS
 // addNode(newNodeName, newNodeImage)
 // Add a brand new node to the Ruleset
@@ -175,11 +175,12 @@ var myGame2 = new Ruleset();
 myGame2.addNode();
 myGame2.addNode();
 myGame2.addNode();
+myGame2.addEdge(1);
 myGame2.updateName(0,"paper");
 myGame2.updateName(1,"rock");
 myGame2.updateName(2,"scissors");
 myGame2.updateImage(0, "paper.jpg");
 myGame2.updateImage(1, "rock.jpg");
 myGame2.updateImage(2, "scissors.jpg");
-myGame2.addEdge(1);
+
 myGame2.consoleLogAll();
