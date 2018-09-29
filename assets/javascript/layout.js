@@ -1,4 +1,4 @@
-var allNodes = [
+/* var allNodes = [
     {
         name: "rock",
         defeats: ["scissors", "lizard"]
@@ -20,6 +20,16 @@ var allNodes = [
         defeats: ["rock", "scissors"]
     }
 ]
+ */
+
+ var userRuleset = new Ruleset(); 
+ var numberOfNodes = 11; //NOTE: we should get this from the user
+
+ for(let i=0; i<numberOfNodes; i++) {
+     userRuleset.addNode();
+ }
+
+ userRuleset.consoleLogAll(); //for debugging purposes
 
 // resources:
     // http://jsfiddle.net/ThiefMaster/LPh33/4/
@@ -28,12 +38,20 @@ var allNodes = [
 function createFields() {
     $('.field').remove();
     var container = $('.display');
-    for(var i = 0; i < allNodes.length; i++) {
-        $('<div/>', {
-            'class': 'field border border-dark rounded-circle text-dark text-center bg-light position-absolute p-3 ' + allNodes[i]['name'],
-            'text': allNodes[i]['name']
-        }).appendTo(container);
-        console.log(allNodes[i]['name'])
+    //NOTE: when we generate these guys, we need to give them an onclick so they will open an editing modal 
+    //and the user can then put in the name and pick an image
+    for(var i = 0; i < userRuleset.allNodes.length; i++) { //NOTE: we may want a better way to reference the nodes
+
+        var newCircle = $("<div>");
+        newCircle.addClass('field border border-dark rounded-circle text-dark text-center bg-light position-absolute p-3');
+        newCircle.text(i + " " + userRuleset.allNodes[i]['name']); //DEBUGGING: added i (the index) to the page
+        newCircle.attr("data-index", i);
+        newCircle.on("click", function(){
+            var myIndex = parseInt($(this).attr("data-index"));
+            console.log("I am " + myIndex);
+        });
+        container.append(newCircle);
+        console.log(userRuleset.allNodes[i]['name'])
     }
   }
 
