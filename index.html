@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
         <link href="https://fonts.googleapis.com/css?family=ABeeZee|Comfortaa|Poiret+One|Poppins|Quicksand:500|Raleway" rel="stylesheet">
         <link rel="stylesheet" href="assets/css/style.css">
+        <link rel="stylesheet" href="assets/css/joint.min.css">
     </head>
     <body>
         <!-- Placeholder title, we can change it if we want later -->
@@ -18,19 +19,8 @@
         <div class="whole-body row mx-1">
             <!-- area to display the nodes in circle format -->
             <!-- we can also do the initial set up inputs in this area -->
-            <div class="display col-md-7 position-relative">
-                <svg  width="100%" height="100%">
-                    <defs>
-                        <marker id="arrowhead" viewBox="0 0 10 10" refX="3" refY="5"
-                            markerWidth="6" markerHeight="6" orient="auto">
-                        <path d="M 0 0 L 10 5 L 0 10 z" />
-                        </marker>
-                    </defs>
-                    <g fill="none" stroke="black" stroke-width="2" marker-end="url(#arrowhead)">
-                        <path id="arrowLeft"/>
-                        <path id="arrowRight"/>
-                    </g>
-                </svg>
+            <div id="display" class="col-md-7 position-relative">
+        
             </div>
             <!-- area for instructions, play buttons, display for chatting with other players, etc -->
             <div class="text-area col-md-5 pt-2 pr-5">
@@ -40,14 +30,19 @@
             </div>
         </div>
         <!-- footer with copywrite, and we can put other credits and things here later if we need/want -->
-        <footer class="p-2">&#169; Theresa Benkman & Tassa Tenhouse</footer>
+        <footer class="p-2">&#169; Theresa, Pushpinder, Tassa, Craig</footer>
         
         <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <!-- dependencies -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone.js"></script>
+        <script src="assets/javascript/joint.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
         <script src="assets/javascript/graph.js"></script>
         <script src="assets/javascript/layout.js"></script>
+
+
     </body>
 </html>

@@ -1,156 +1,103 @@
-/* var allNodes = [
-    {
-        name: "rock",
-        defeats: ["scissors", "lizard"]
-    },
-    {
-        name: "scissors",
-        defeats: ["lizard", "paper"]
-    },
-    {
-        name: "lizard",
-        defeats: ["paper", "Spock"]
-    },
-    {
-        name: "paper",
-        defeats: ["Spock", "rock"]
-    },
-    {
-        name: "Spock",
-        defeats: ["rock", "scissors"]
-    }
-]
- */
 
- var userRuleset = new Ruleset(); 
- var numberOfNodes = 11; //NOTE: we should get this from the user
+//GLOBAL VARIABLES: 
+//GRAPH AREA -- this is where we draw our nodes
+var userRuleset = new Ruleset(); 
+var graph = new joint.dia.Graph;
+var paper = new joint.dia.Paper({
+    el: document.getElementById('display'),
+    model: graph,
+    width: 350,
+    height: 600,
+    interactive: { elementMove: false, arrowheadMove: false }, //makes the items not draggable, arrows not draggable
+    gridSize: 1
+});
+var items = []; //array that stores the graph elements to display on our paper
 
- for(let i=0; i<numberOfNodes; i++) {
-     userRuleset.addNode();
+//(FOR TESTING PURPOSES: we are going to create blank nodes for userRuleset here)
+var numberOfNodes = 15; //NOTE: we should get this from the user
+
+for(let i=0; i<numberOfNodes; i++) {
+    userRuleset.addNode();
+}
+
+function createNodes() {
+   //to-do: clear out any old items
+   items = [];
+   //NOTE: when we generate these guys, we need to give them an onclick so they will open an editing modal 
+   //and the user can then put in the name and pick an image
+   for(var i = 0; i < userRuleset.totalNodes(); i++) { //NOTE: we may want a better way to reference the nodes
+       var newItem = new joint.shapes.standard.Circle();
+        newItem.position(5, 10); 
+        newItem.resize(75, 75);
+        newItem.attr({
+            body: {
+                fill: 'green'
+            },
+            label: {
+                text: userRuleset.getName(i),
+                fill: 'white'
+            }
+        });
+        items.push(newItem); //hold an array of these new items 
+   }
  }
 
- userRuleset.consoleLogAll(); //for debugging purposes
+ //distributeNodesInCircle()
+ //function distributes all existing items into a circle pattern
+ function distributeNodesInCircle() {
+       var radius = 250;
+       console.log(paper.options.width);
+       width = paper.options.width; //width and height are the size of the canvas
+       height = paper.options.height;
+       // for reasons I have yet to understand, angle 4.72 puts the first item closest to the top
+       angle = 4.72, step = (2*Math.PI) / userRuleset.totalNodes();
+       console.log("Width: " + width, "Height: " + height)
+       items.forEach(function(currentItem, index) {
+       var x = Math.round(width/2 + radius * Math.cos(angle)) + 100;
+       var y = Math.round(height/2 + radius * Math.sin(angle)) - 50;  //note: we are giving a bit of an offset here because we want this to look centered
+       /* if(window.console) {
+           console.log(index, x, y);
+       } */
+       currentItem.translate(x, y); //move the item to the place we want it to go
+       currentItem.addTo(graph); //add it to our drawing paper
+       angle += step;
+   });
+ }
+ 
 
-// resources:
-    // http://jsfiddle.net/ThiefMaster/LPh33/4/
-    // https://stackoverflow.com/questions/39553105/drawing-curved-svg-arrow-lines-from-div-to-div/39575674
-
-function createFields() {
-    $('.field').remove();
-    var container = $('.display');
-    //NOTE: when we generate these guys, we need to give them an onclick so they will open an editing modal 
-    //and the user can then put in the name and pick an image
-    for(var i = 0; i < userRuleset.allNodes.length; i++) { //NOTE: we may want a better way to reference the nodes
-
-        var newCircle = $("<div>");
-        newCircle.addClass('field border border-dark rounded-circle text-dark text-center bg-light position-absolute p-3');
-        newCircle.text(i + " " + userRuleset.allNodes[i]['name']); //DEBUGGING: added i (the index) to the page
-        newCircle.attr("data-index", i);
-        newCircle.on("click", function(){
-            var myIndex = parseInt($(this).attr("data-index"));
-            console.log("I am " + myIndex);
+ //linkNodes() 
+ //this is a function that will link all nodes based on the number of steps currently stored in the ruleset (and the directionality of them)
+ function linkNodes() {
+    //draw arrows based on the current directions in the ruleset
+   
+    //for as many steps as we have, we are going to link items!
+    for(let i=0; i<userRuleset.edges.length; i++) {
+        var numSteps = (i+1)*userRuleset.edges[i];
+        const totalNodes = userRuleset.totalNodes(); //total number of items we have -- aka the total # of items we have
+        items.forEach(function(currentItem, index){
+            //figure out where our target is 
+            var targetIndex = index + numSteps;
+            //make sure that target index doesn't exceed the bounds of our array!
+            if(targetIndex<0) {  //if we have gone below the START of the array, adjust our goals
+                targetIndex = totalNodes + targetIndex;
+            }
+            else if (targetIndex>=totalNodes) { //OR if we have gone past the END of the array
+                //figure out how much we overshot by:
+                targetIndex = targetIndex - totalNodes;
+            }
+            //now that we have this set, draw the correct arrow!
+            var link = new joint.shapes.standard.Link();
+            link.source(currentItem);
+            link.target(items[targetIndex]);
+            link.attr('line/strokeWidth', 5);
+            link.addTo(graph);
         });
-        container.append(newCircle);
-        console.log(userRuleset.allNodes[i]['name'])
     }
-  }
+ }
 
-  function distributeFields() {
-    var radius = 250;
-    var fields = $('.field'), container = $('.display'),
-        width = container.width(), height = container.height(),
-        // for reasons I have yet to understand, angle 4.72 puts the first item closest to the top
-        angle = 4.72, step = (2*Math.PI) / fields.length;
-        console.log("Width: " + width, "Height: " + height)
-    fields.each(function() {
-        var x = Math.round(width/2 + radius * Math.cos(angle) - $(this).width()/2);
-        var y = Math.round(height/2 + radius * Math.sin(angle) - $(this).height()/2);
-        if(window.console) {
-            console.log($(this).text(), x, y);
-        }
-        $(this).css({
-            left: x + 'px',
-            top: y +75 + 'px'
-        });
-        angle += step;
-    });
-  }
-  
-  createFields();
-  distributeFields();
+//CODE TO CALL ONCE THE USER HAS INPUT THEIR DESIRED # OF ITEMS:
+ createNodes();  // create the nodes
+ distributeNodesInCircle(); //(TO-DO): pick which function we use to distribute nodes based on size of the display - mobile or web
+ linkNodes();
 
 
-
-
-// for each level of arrows, we need to append something like the following to the display div
-// <svg  width="100%" height="100%">
-    // <defs>
-        // <marker id="arrowhead" viewBox="0 0 10 10" refX="3" refY="5"
-            // markerWidth="2" markerHeight="2" orient="auto" fill="black">
-        // <path d="M 0 0 L 10 5 L 0 10 z" />
-        // </marker>
-    // </defs>
-    // <g fill="none" stroke="black" stroke-width="2" marker-end="url(#arrowhead)">
-        // <path id="arrowLeft"/>
-        // <path id="arrowRight"/>
-    // </g>
-// </svg>
-
-// The only reason I chose to do multiple svg layers is to have multiple colors of arrows
-    // we may want to put each in a separate div, to make classing easier
-    // each div should have css for position absolute (or relative?), 
-    // and sizing for 100% of it's parent
-// The defs tag contains the info for the arrow heads
-    // the only thing that should change for each level is:
-        // the fill on the marker, which changes the color of the arrow heads
-    // the markerHeight and markerWidth change the size of the arrow head. 
-        // Changing either one changes the size of the whole without changing shape, 
-        // so I think it's better to be consistant
-        // if changing this, it should be changed for all in the code, not calulated individually
-// the g tag contains the arrows
-    // the identifiers for the arrow stems are in the g tag
-        // the stroke (color) should change for every level, but not for each arrow
-    // the path tags should be generated and appended by the function
-        // each should have a unique id and coordinates generated by the function
-
-
-// math for the arrows
-    // # of levels = (allNodes.length-1) /2
-    // do we need to store any info at each level? 
-    // for loop to iterate through allNodes
-        // for loop to iterate though 'defeats'
-            // node's div has class === it's name, which we can use to find it
-            // set variables to track x1, y1, x2, and y2
-                // get the offset of that node's div, which will return an object containing 
-                    // top and left distances to the edge of the window
-                    // measured in pixels
-                // and get the height and width of the node's div as well, also pixels
-            // x1 = offset.left + (width /2)
-            // y1 = offset.top + (height /2)
-            // This means that x1, y1 will be the center of the node's div
-
-            // next address the node === 'defeats'
-            // get the offset and height and width
-            // x2 = offset.left + (width /2)
-            // y2 = offset.top + (height /2)
-
-            // next we compare them to see which way the arrow is pointing
-            // the math here makes the arrow appear between the objects instead of 
-                // on top of them or under them, and points the arrow in the correct direction
-            // var m = (whatever number we choose for the margin) 
-                // start with 8 and see what happens
-                // we may also need a separate one for the beginning and end, 
-                // depending on how the arrowhead looks
-            // 4 if conditions
-            // if x2 > x1 (x is increasing, arrow is pointing right)
-                // x1 = x1 + ((width of first node /2) + m)
-                // x2 = x2 - ((width of target node /2) + m)
-            // if x2 < x1 (x is decreasing, arrow is pointing left)
-                // x1 = x1 - ((width of first node /2) + m)
-                // x2 = x2 + ((width of target node /2) + m)
-            // if y2 > y1 (y is increasing, arrow is pointing down)
-                // y1 = y1 + ((height of first node /2) + m)
-                // y2 = y2 - ((height of target node /2) + m)
-            // if y2 < y1 (y is decreasing, arrow is pointing up)
-                // y1 = y1 - ((height of first node /2) + m)
-                // y2 = y2 + ((height of target node /2) + m)
