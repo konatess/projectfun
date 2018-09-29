@@ -1,6 +1,7 @@
 html, body {
     height: 100%;
-    background-image: url("../images/trianglify.svg")
+/*     background-image: url("../images/trianglify.svg") */
+    background-color: palegoldenrod;
 }
 
 * {
@@ -20,4 +21,8 @@ header, footer {
 footer {
     position: sticky;
     top: 100%;
+}
+
+#display {
+    border: 1px solid red;
 }
