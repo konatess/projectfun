@@ -290,7 +290,7 @@ this.compile = function(){
 
 //example of adding a game and then creating the associations
 //here's how easy it is to create 'rock-paper-scissors-lizard-spock'!
-console.log("======BIG BANG THEORY EXAMPLE========");
+/* console.log("======BIG BANG THEORY EXAMPLE========");
 var bigBangTheoryGame = new Ruleset();
 bigBangTheoryGame.addNode("spock", "spock.jpg");
 bigBangTheoryGame.addNode("scissors", "scissors.jpg");
@@ -314,4 +314,4 @@ vanillaRPS.setImage(0, "paper.jpg");
 vanillaRPS.setImage(1, "rock.jpg");
 vanillaRPS.setImage(2, "scissors.jpg");
 vanillaRPS.compile();
-vanillaRPS.consoleLogAll();
+vanillaRPS.consoleLogAll(); */
