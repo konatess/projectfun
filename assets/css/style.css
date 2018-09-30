@@ -26,3 +26,9 @@ footer {
 #display {
     border: 1px solid red;
 }
+
+.modalPic {
+    height: 150px;
+    width: auto;    
+}
+
