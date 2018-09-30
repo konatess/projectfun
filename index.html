@@ -8,13 +8,33 @@
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+        <!-- Google font-->
         <link href="https://fonts.googleapis.com/css?family=ABeeZee|Comfortaa|Poiret+One|Poppins|Quicksand:500|Raleway" rel="stylesheet">
+        <!-- Our own custom style sheet-->
         <link rel="stylesheet" href="assets/css/style.css">
+        <!-- Custom css for Joint -->
         <link rel="stylesheet" href="assets/css/joint.min.css">
+        <!-- Custom css for parsley form validations -->
+        <link rel="stylesheet" href="assets/css/parsley.css">
     </head>
     <body>
+        <div class="container-fluid">
         <!-- Placeholder title, we can change it if we want later -->
-        <header class="p-1"><h2>Rock Paper Scissors Game Generator</h2></header>
+        <div class="row">
+            <header class="col-12 p-1"><h2>Rock Paper Scissors Game Generator</h2></header>
+        </div>
+        <div class="row pb-2">
+            <nav class="col-12 navbar navbar-expand-lg navbar-dark bg-dark">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+              
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul class="signin-menu navbar-nav ml-auto">
+                  </ul>
+                </div>
+              </nav>
+        </div>
         <!-- container for whole body so that we can manipulate borders etc -->
         <div class="whole-body row mx-1">
             <!-- area to display the nodes in circle format -->
@@ -29,20 +49,103 @@
                 <p>Non eram nescius, Brute, cum, quae summis ingeniis exquisitaque doctrina philosophi Graeco sermone tractavissent, ea Latinis litteris mandaremus, fore ut hic noster labor in varias reprehensiones incurreret. nam quibusdam, et iis quidem non admodum indoctis, totum hoc displicet philosophari. quidam autem non tam id reprehendunt, si remissius agatur, sed tantum studium tamque multam operam ponendam in eo non arbitrantur. erunt etiam, et ii quidem eruditi Graecis litteris.</p>
             </div>
         </div>
+    </div>
         <!-- footer with copywrite, and we can put other credits and things here later if we need/want -->
         <footer class="p-2">&#169; Theresa, Pushpinder, Tassa, Craig</footer>
-        
-        <!-- Optional JavaScript -->
-        <!-- dependencies -->
+
+        <!-- Modal for sign-in/sign-up-->
+        <div class="modal fade" id="signInUpModal" tabindex="-1" role="dialog" aria-labelledby="signInUpModalHeader" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Sign In</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div role="tabpanel">
+                            <!-- Nav tabs -->
+                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                    <a class="nav-item nav-link active" id="nav-signin-tab" data-toggle="tab" href="#signInTab" role="tab" aria-controls="nav-home" aria-selected="true">Sign In</a>
+                                    <a class="nav-item nav-link" id="nav-signup-tab" data-toggle="tab" href="#newAccountTab" role="tab" aria-controls="nav-profile" aria-selected="false">Create An Account</a>
+                                  </div>
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active py-2" id="signInTab">
+                                    <form class="py-2" data-parsley-validate>
+                                        <div class="form-group">
+                                            <label for="signInEmail">Email address</label>
+                                            <input type="email" class="form-control" id="signInEmail" aria-describedby="emailHelp" data-parsley-type="email" data-parsley-trigger="input blur focusout" placeholder="Enter email" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="signInPassword">Password</label>
+                                            <input type="password" class="form-control" id="signInPassword" data-parsley-length="[8, 64]" data-parsley-trigger="input blur focusout" placeholder="Password" required>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div role="tabpanel" class="tab-pane py-2" id="newAccountTab">
+                                    <p>Create an account to save your game as you create it!  You can also invite friends to play your custom rules.</p>
+                                    <form>
+                                        <div class="form-group" data-parsley-validate>
+                                            <label for="signUpEmail">Email address</label>
+                                            <input type="email" class="form-control" id="signUpEmail" aria-describedby="emailHelp" data-parsley-type="email" data-parsley-trigger="input blur focusout" placeholder="Enter email" required>
+                                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="signUpPassword">Password</label>
+                                            <input type="password" class="form-control" id="signUpPassword" data-parsley-length="[8, 64]" data-parsley-trigger="input blur focusout" placeholder="Password" required>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary login">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Include JQuery -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+
+        <!-- Include Joint and required dependencies (for graphs) -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone.js"></script>
         <script src="assets/javascript/joint.min.js"></script>
+
+        <!-- Include bootstrap dependencies (for modals)-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
+
+        <!-- Include Firebase -- App, Auth, and Database -->
+        <script src="https://www.gstatic.com/firebasejs/5.4.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/5.4.1/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/5.4.1/firebase-database.js"></script>  
+
+        <!-- Include parsley for form validation-->
+        <script src="assets/javascript/parsley.js"></script>
+
+        <!-- NOTE: Not currently using firebase UI 
+            Include Firebase UI, which helps with authentication -->
+<!--         <script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js"></script>   -->
+
+        <!-- Include our secret -->
+        <!-- NOTE: IT IS IMPERATIVE WE KEEP THIS IN THE .gitignore -->
+         <script src="assets/javascript/secret.js"></script>
+
+        <!-- Include the script that holds the Ruleset and Node data structures -->
         <script src="assets/javascript/graph.js"></script>
+        
+        <!-- Include the script that visualizes objects -->
         <script src="assets/javascript/layout.js"></script>
 
+        <!-- Include the script that allows us to authorize users -->
+        <script src="assets/javascript/auth.js"></script> 
 
     </body>
 </html>

@@ -14,11 +14,17 @@ var paper = new joint.dia.Paper({
 var items = []; //array that stores the graph elements to display on our paper
 
 //(FOR TESTING PURPOSES: we are going to create blank nodes for userRuleset here)
-var numberOfNodes = 15; //NOTE: we should get this from the user
+var numberOfNodes = 5; //NOTE: we should get this from the user
 
 for(let i=0; i<numberOfNodes; i++) {
     userRuleset.addNode();
 }
+userRuleset.setName(0, "Scissors");  //Scissors-Lizard-Paper-Spock-Rock
+userRuleset.setName(1, "Lizard");
+userRuleset.setName(2, "Paper");
+userRuleset.setName(3, "Spock");
+userRuleset.setName(4, "Rock");
+
 
 function createNodes() {
    //to-do: clear out any old items
@@ -89,15 +95,18 @@ function createNodes() {
             var link = new joint.shapes.standard.Link();
             link.source(currentItem);
             link.target(items[targetIndex]);
-            link.attr('line/strokeWidth', 5);
+            link.attr('line/strokeWidth', 2);
             link.addTo(graph);
         });
     }
  }
 
+
+
+
 //CODE TO CALL ONCE THE USER HAS INPUT THEIR DESIRED # OF ITEMS:
- createNodes();  // create the nodes
- distributeNodesInCircle(); //(TO-DO): pick which function we use to distribute nodes based on size of the display - mobile or web
- linkNodes();
+ //createNodes();  // create the nodes
+ //distributeNodesInCircle(); //(TO-DO): pick which function we use to distribute nodes based on size of the display - mobile or web
+ //linkNodes();
 
 
