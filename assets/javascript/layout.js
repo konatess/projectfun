@@ -73,16 +73,17 @@ function createNodes() {
 
  //linkNodes() 
  //this is a function that will link all nodes based on the number of steps currently stored in the ruleset (and the directionality of them)
+ //it will draw arrows based on the current directions stored in the 'edges' array in the Ruleset object
+ //note: a collection of 'edges' is being referred to as a 'step' -- ie, how many nodes away we are looking 
+ //in traditional rock-scissors-paper, each item defeats the item immediately adjacent to it ('one away'). We are calling that "step 1".
  function linkNodes() {
-    //draw arrows based on the current directions in the ruleset
-   
-    //for as many steps as we have, we are going to link items!
+    //for as many 'steps' as we have, we are going to link items!
     for(let i=0; i<userRuleset.edges.length; i++) {
-        var numSteps = (i+1)*userRuleset.edges[i];
+        var stepNumber = (i+1)*userRuleset.edges[i]; //the edges array holds directionality as 1 (clockwise) and -1 (counterclockwise)
         const totalNodes = userRuleset.totalNodes(); //total number of items we have -- aka the total # of items we have
         items.forEach(function(currentItem, index){
             //figure out where our target is 
-            var targetIndex = index + numSteps;
+            var targetIndex = index + stepNumber;
             //make sure that target index doesn't exceed the bounds of our array!
             if(targetIndex<0) {  //if we have gone below the START of the array, adjust our goals
                 targetIndex = totalNodes + targetIndex;
@@ -102,11 +103,9 @@ function createNodes() {
  }
 
 
-
-
 //CODE TO CALL ONCE THE USER HAS INPUT THEIR DESIRED # OF ITEMS:
- //createNodes();  // create the nodes
- //distributeNodesInCircle(); //(TO-DO): pick which function we use to distribute nodes based on size of the display - mobile or web
- //linkNodes();
+ createNodes();  // create the nodes
+ distributeNodesInCircle(); //(TO-DO): pick which function we use to distribute nodes based on size of the display - mobile or web
+ linkNodes();
 
 
