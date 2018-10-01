@@ -14,11 +14,17 @@ var paper = new joint.dia.Paper({
 var items = []; //array that stores the graph elements to display on our paper
 
 //(FOR TESTING PURPOSES: we are going to create blank nodes for userRuleset here)
-var numberOfNodes = 15; //NOTE: we should get this from the user
+var numberOfNodes = 5; //NOTE: we should get this from the user
 
 for (let i = 0; i < numberOfNodes; i++) {
     userRuleset.addNode();
 }
+userRuleset.setName(0, "Scissors");  //Scissors-Lizard-Paper-Spock-Rock
+userRuleset.setName(1, "Lizard");
+userRuleset.setName(2, "Paper");
+userRuleset.setName(3, "Spock");
+userRuleset.setName(4, "Rock");
+
 
 function createNodes() {
     //to-do: clear out any old items
@@ -42,15 +48,15 @@ function createNodes() {
             label: {
                 text: userRuleset.getName(i),
                 fill: 'white'
+            },
+            dataindex: {  //NOTE: this 'dataindex' attribute will store the index of the related node in our userRuleset object :)
+                text: i
             }
         });
 
         items.push(newItem); //hold an array of these new items 
     }
 }
-
-// this should be the line that calls the modal, but it does not.  There appears to be some drag and drop arrows that appear on hover over the nodes.  it breaks the graph being drawn.  I wonder if there is conflict with the other on.click event handler for dragging the nodes?  Or , I am just wrong.
-$('.inputModal').modal("click", items);
 
 //distributeNodesInCircle()
 //function distributes all existing items into a circle pattern
@@ -77,16 +83,17 @@ function distributeNodesInCircle() {
 
 //linkNodes() 
 //this is a function that will link all nodes based on the number of steps currently stored in the ruleset (and the directionality of them)
+//it will draw arrows based on the current directions stored in the 'edges' array in the Ruleset object
+//note: a collection of 'edges' is being referred to as a 'step' -- ie, how many nodes away we are looking 
+//in traditional rock-scissors-paper, each item defeats the item immediately adjacent to it ('one away'). We are calling that "step 1".
 function linkNodes() {
-    //draw arrows based on the current directions in the ruleset
-
-    //for as many steps as we have, we are going to link items!
+    //for as many 'steps' as we have, we are going to link items!
     for (let i = 0; i < userRuleset.edges.length; i++) {
-        var numSteps = (i + 1) * userRuleset.edges[i];
+        var stepNumber = (i + 1) * userRuleset.edges[i]; //the edges array holds directionality as 1 (clockwise) and -1 (counterclockwise)
         const totalNodes = userRuleset.totalNodes(); //total number of items we have -- aka the total # of items we have
         items.forEach(function (currentItem, index) {
             //figure out where our target is 
-            var targetIndex = index + numSteps;
+            var targetIndex = index + stepNumber;
             //make sure that target index doesn't exceed the bounds of our array!
             if (targetIndex < 0) {  //if we have gone below the START of the array, adjust our goals
                 targetIndex = totalNodes + targetIndex;
@@ -99,51 +106,59 @@ function linkNodes() {
             var link = new joint.shapes.standard.Link();
             link.source(currentItem);
             link.target(items[targetIndex]);
-            link.attr('line/strokeWidth', 5);
+            link.attr('line/strokeWidth', 2);
             link.addTo(graph);
         });
     }
 }
 
+paper.on('element:pointerclick', function (currentItem) {
+    var currentItemIndex = currentItem.model.attr('dataindex/text'); //To access the current item's INDEX, we have to use the attribute 'dataindex/text'
+    console.log("We have clicked the node " + currentItemIndex);
+    //NOTE: this is where we'd pop up Craig's modal and get the user input for the item's name 
+
+    //  
+    // MODAL STUFF HERE
+    // 
+
+    $(document).ready(function () {
+        $(".resetModalButton").click(function (e) {
+            $("#nodeNameInput").val("");
+            $(".picSelectModal").empty();
+        });
+
+        // modal - submit button for the text bar
+        $(".submit").click(function (e) {
+            $(".picSelectModal").html("");
+
+            // var apiKey = "4cac8681185d926a8cc5a7f2671b3eb5"
+
+            var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?format=json&tags=" + $("#nodeNameInput").val();
+
+            $.ajax({
+                url: flickerAPI,
+                dataType: "jsonp", // jsonp
+                jsonpCallback: 'jsonFlickrFeed', // add this property
+                success: function (result, status, xhr) {
+                    $.each(result.items, function (i, item) {
+                        $("<img>").attr("src", item.media.m).addClass("img img-thumbnail modalPic").appendTo(".picSelectModal");
+                        if (i === 5) {
+                            return false;
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr)
+                    $(".picSelectModal").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+                }
+            });
+        });
+    });
+    //userRuleset.setName(currentItemIndex, "Testing"); //this line would set the name in the internal datamodel...
+    //currentItem.model.attr('label/text', "Testing"); //and this line changes the display name 
+});
+
 //CODE TO CALL ONCE THE USER HAS INPUT THEIR DESIRED # OF ITEMS:
 createNodes();  // create the nodes
 distributeNodesInCircle(); //(TO-DO): pick which function we use to distribute nodes based on size of the display - mobile or web
 linkNodes();
-
-//  
-// MODAL STUFF HERE
-// 
-
-$(document).ready(function () {
-    $(".resetModalButton").click(function (e) {
-        $("#nodeNameInput").val("");
-        $(".picSelectModal").empty();
-    });
-
-    // modal - submit button for the text bar
-    $(".submit").click(function (e) {
-        $(".picSelectModal").html("");
-
-        // var apiKey = "4cac8681185d926a8cc5a7f2671b3eb5"
-
-        var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?format=json&tags=" + $("#nodeNameInput").val();
-
-        $.ajax({
-            url: flickerAPI,
-            dataType: "jsonp", // jsonp
-            jsonpCallback: 'jsonFlickrFeed', // add this property
-            success: function (result, status, xhr) {
-                $.each(result.items, function (i, item) {
-                    $("<img>").attr("src", item.media.m).addClass("img img-thumbnail modalPic").appendTo(".picSelectModal");
-                    if (i === 5) {
-                        return false;
-                    }
-                });
-            },
-            error: function (xhr, status, error) {
-                console.log(xhr)
-                $(".picSelectModal").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
-            }
-        });
-    });
-});
