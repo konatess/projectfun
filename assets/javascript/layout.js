@@ -106,13 +106,15 @@ function linkNodes() {
             var link = new joint.shapes.standard.Link();
             link.source(currentItem);
             link.target(items[targetIndex]);
-            // adjust width of arrow stems 
+            // adjust width of arrow stems can change color with line/stroke, color
             link.attr('line/strokeWidth', 2);
-            // adjust size of arrow heads, fill: will change color
+            // adjust size of arrow heads, can also add fill: color
             link.attr('line/targetMarker', {'d': 'M 20 -10 0 0 20 10 Z'})
+            // POSSIBLE FUTURE FEATURE
             // puts a label in the middle of each path. 
             // can use this to add custom words
             // however, it only looks good on fewer relationsips
+            // and rotating the label to the same angle as the path is more complicated
             // maybe we can try using it only on the single step displays
             // link.appendLabel({
             //     attrs: {
@@ -134,6 +136,7 @@ paper.on('element:pointerclick', function (currentItem) {
     //  
     // MODAL STUFF HERE
     // 
+    $('#inputModal').modal('show');
 
     $(document).ready(function () {
         $(".resetModalButton").click(function (e) {
