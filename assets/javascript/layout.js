@@ -42,6 +42,9 @@ function createNodes() {
             label: {
                 text: userRuleset.getName(i),
                 fill: 'white'
+            },
+            dataindex: {  //NOTE: this 'dataindex' attribute will store the index of the related node in our userRuleset object :)
+                text: i
             }
         });
         items.push(newItem); //hold an array of these new items 
@@ -102,10 +105,16 @@ function createNodes() {
     }
  }
 
+ paper.on('element:pointerclick', function(currentItem) {
+    var currentItemIndex = currentItem.model.attr('dataindex/text'); //To access the current item's INDEX, we have to use the attribute 'dataindex/text'
+    console.log("We have clicked the node " + currentItemIndex);
+    //NOTE: this is where we'd pop up Craig's modal and get the user input for the item's name 
+
+    //userRuleset.setName(currentItemIndex, "Testing"); //this line would set the name in the internal datamodel...
+    //currentItem.model.attr('label/text', "Testing"); //and this line changes the display name 
+});
 
 //CODE TO CALL ONCE THE USER HAS INPUT THEIR DESIRED # OF ITEMS:
- createNodes();  // create the nodes
- distributeNodesInCircle(); //(TO-DO): pick which function we use to distribute nodes based on size of the display - mobile or web
- linkNodes();
-
-
+createNodes();  // create the nodes
+distributeNodesInCircle(); //(TO-DO): pick which function we use to distribute nodes based on size of the display - mobile or web
+linkNodes();
