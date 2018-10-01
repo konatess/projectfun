@@ -14,7 +14,7 @@ var paper = new joint.dia.Paper({
 var items = []; //array that stores the graph elements to display on our paper
 
 //(FOR TESTING PURPOSES: we are going to create blank nodes for userRuleset here)
-var numberOfNodes = 15; //NOTE: we should get this from the user
+var numberOfNodes = 11; //NOTE: we should get this from the user
 
 for(let i=0; i<numberOfNodes; i++) {
     userRuleset.addNode();
@@ -89,7 +89,21 @@ function createNodes() {
             var link = new joint.shapes.standard.Link();
             link.source(currentItem);
             link.target(items[targetIndex]);
-            link.attr('line/strokeWidth', 5);
+            // adjust width of arrow stems 
+            link.attr('line/strokeWidth', 2);
+            // adjust size of arrow heads, fill: will change color
+            link.attr('line/targetMarker', {'d': 'M 20 -10 0 0 20 10 Z'})
+            // puts a label in the middle of each path. 
+            // can use this to add custom words
+            // however, it only looks good on fewer relationsips
+            // maybe we can try using it only on the single step displays
+            // link.appendLabel({
+            //     attrs: {
+            //         text: {
+            //             text: 'defeats'
+            //         }
+            //     }
+            // });
             link.addTo(graph);
         });
     }

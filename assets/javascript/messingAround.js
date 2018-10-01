@@ -6,7 +6,9 @@ var graph = new joint.dia.Graph;
             width: 600,
             height: 600,
             gridSize: 1,
-            interactive: { elementMove: false, arrowheadMove: false }
+            // makes code not draggable
+            interactive: { elementMove: false, arrowheadMove: false },
+            pointerEvents: 'none'
         });
 
         
@@ -16,7 +18,7 @@ var graph = new joint.dia.Graph;
         rect.resize(50, 50);
         rect.attr({
             body: {
-                fill: '../images/monster.svg'
+                fill: './assets/images/monster.svg'
             },
             label: {
                 text: 'Hello',
@@ -25,11 +27,15 @@ var graph = new joint.dia.Graph;
         });
         rect.addTo(graph);
 
+        // clone duplicates the referenced image, and then each of the lined below it modifies it.
         var rect2 = rect.clone();
         rect2.position(200, 30);
         rect2.attr('label/text', 'World!');
         rect2.addTo(graph);
 
+        // code to make the elements clickable. 
+        // This makes all elements clickable, 
+        // so we need this function to return info about what was clicked
         paper.on('element:pointerclick', function(cellView) {
             var isElement = cellView.model.isElement();
             var message = (isElement ? 'Element' : 'Link') + ' clicked';
