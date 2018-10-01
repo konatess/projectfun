@@ -1,48 +1,106 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <title>RPS Generator</title>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
-        <link href="https://fonts.googleapis.com/css?family=ABeeZee|Comfortaa|Poiret+One|Poppins|Quicksand:500|Raleway" rel="stylesheet">
-        <link rel="stylesheet" href="assets/css/style.css">
-        <link rel="stylesheet" href="assets/css/joint.min.css">
-    </head>
-    <body>
-        <!-- Placeholder title, we can change it if we want later -->
-        <header class="p-1"><h2>Rock Paper Scissors Game Generator</h2></header>
-        <!-- container for whole body so that we can manipulate borders etc -->
-        <div class="whole-body row mx-1">
-            <!-- area to display the nodes in circle format -->
-            <!-- we can also do the initial set up inputs in this area -->
-            <div id="display" class="col-md-7 position-relative">
-        
-            </div>
-            <!-- area for instructions, play buttons, display for chatting with other players, etc -->
-            <div class="text-area col-md-5 pt-2 pr-5">
-                <h3>Instructions</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                <p>Non eram nescius, Brute, cum, quae summis ingeniis exquisitaque doctrina philosophi Graeco sermone tractavissent, ea Latinis litteris mandaremus, fore ut hic noster labor in varias reprehensiones incurreret. nam quibusdam, et iis quidem non admodum indoctis, totum hoc displicet philosophari. quidam autem non tam id reprehendunt, si remissius agatur, sed tantum studium tamque multam operam ponendam in eo non arbitrantur. erunt etiam, et ii quidem eruditi Graecis litteris.</p>
+<head>
+    <title>RPS Generator</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
+        crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=ABeeZee|Comfortaa|Poiret+One|Poppins|Quicksand:500|Raleway" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/joint.min.css">
+</head>
+
+<body>
+    <!-- Placeholder title, we can change it if we want later -->
+    <header class="p-1">
+        <h2>Rock Paper Scissors Game Generator</h2>
+    </header>
+    <!-- container for whole body so that we can manipulate borders etc -->
+    <div class="whole-body row mx-1">
+        <!-- area to display the nodes in circle format -->
+        <!-- we can also do the initial set up inputs in this area -->
+        <div id="display" class="col-md-7 position-relative">
+
+        </div>
+        <!-- area for instructions, play buttons, display for chatting with other players, etc -->
+        <div class="text-area col-md-5 pt-2 pr-5">
+            <h3>Instructions</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+                ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+                eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+                deserunt mollit anim id est laborum.</p>
+            <p>Non eram nescius, Brute, cum, quae summis ingeniis exquisitaque doctrina philosophi Graeco sermone
+                tractavissent, ea Latinis litteris mandaremus, fore ut hic noster labor in varias reprehensiones
+                incurreret. nam quibusdam, et iis quidem non admodum indoctis, totum hoc displicet philosophari. quidam
+                autem non tam id reprehendunt, si remissius agatur, sed tantum studium tamque multam operam ponendam in
+                eo non arbitrantur. erunt etiam, et ii quidem eruditi Graecis litteris.</p>
+        </div>
+    </div>
+    <!-- footer with copywrite, and we can put other credits and things here later if we need/want -->
+    <footer class="p-2">&#169; Theresa, Pushpinder, Tassa, Craig</footer>
+
+    <!-- Modal header -->
+    <div class="modal fade bd-example-modal-lg inputModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="nodeNameLabel">Select your RPS++ actor's name</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <!-- Node's name text bar -->
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Node Name:</label>
+                            <input type="text" class="form-control" id="nodeNameInput">
+                            <button type="button" class="btn btn-primary submit">Submit</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- div for displaying pictures  -->
+                <div class="container">
+                    <div class="picSelectModal" input type="image" type="image" src="">
+                        <!-- pictures go here -->
+                    </div>
+                </div>
+
+
+                <!-- reset, close and save buttons -->
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary resetModalButton">Reset</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary saveModalButton" data-dismiss="modal">Save</button>
+                </div>
             </div>
         </div>
-        <!-- footer with copywrite, and we can put other credits and things here later if we need/want -->
-        <footer class="p-2">&#169; Theresa, Pushpinder, Tassa, Craig</footer>
-        
-        <!-- Optional JavaScript -->
-        <!-- dependencies -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone.js"></script>
-        <script src="assets/javascript/joint.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
-        <script src="assets/javascript/graph.js"></script>
-        <script src="assets/javascript/layout.js"></script>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone.js"></script>
+    <script src="assets/javascript/joint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"
+        crossorigin="anonymous"></script>
+    <script src="assets/javascript/graph.js"></script>
+    <script src="assets/javascript/layout.js"></script>
 
 
-    </body>
+</body>
+
 </html>
