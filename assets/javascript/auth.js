@@ -1,3 +1,8 @@
+//GLOBAL VARIABLES
+var userID = ""; //our userID is null until someone logs in
+var currentGameID = ""; //similarly, our game ID is null until someone logs in
+var database = firebase.database();
+
 $(".login").on("click", function(){
     //first, determine if we are trying to sign in or up...
     //SIGN IN
@@ -53,6 +58,8 @@ firebase.auth().onAuthStateChanged(function(user) {
     if(user) {
         //if someone has logged in, let's hide the things they don't need to access
         console.log("Someone is logged in!");
+        //store their user id in our global variable...
+        userID = user.uid;
         //remove the 'sign in/up' button...
         $(".signin-menu").empty();
         //..and replace with a sign out
@@ -87,4 +94,36 @@ firebase.auth().onAuthStateChanged(function(user) {
         //finally, close the signin modal
         $("#signInUpModal .close").click() 
     }
+});
+
+$("#test").on('click', function(){
+    var user = firebase.auth().currentUser; 
+    if(user)
+    {
+        console.log("Still logged in!" + user.uid);
+        //push a new game object to the database 
+        userID = user.uid;
+/*         var latestPush = database.ref("games/"+userID).push(
+            {
+                title: "Rock Paper Scissors",
+                nodes: {
+                    0: { name: "scissors", 
+                    image: "scissors.jpg" },
+                    1: { name: "paper", 
+                        image: "paper.jpg" },
+                    2: { name: "rock", 
+                       image: "rock.jpg" }
+                },
+                edges: {
+                    0: 1
+                }
+            }
+        ); 
+        console.log(latestPush.key);  */ 
+        currentGameID = "-LNnTvAUjMsP715lSJk1";
+    }  
+    else {
+        console.log("Not yet logged in");
+    }
+    
 });
