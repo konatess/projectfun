@@ -138,7 +138,7 @@ paper.on('element:pointerclick', function (currentItem) {
     // 
     $('#inputModal').modal('show');
 
-    // $(document).ready(function () {
+    $(document).ready(function () {
         $(".resetModalButton").click(function (e) {
             $("#nodeNameInput").val("");
             $("#nodeNameDisplay").val("");
@@ -170,11 +170,11 @@ paper.on('element:pointerclick', function (currentItem) {
                     $(".picSelectModal").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
                 }
             });
-            $('.modalPic').on('click', function() {
-                console.log('Picture clicked')
-            })
         });
-    // });
+    });
+    $(document).on('click', '.modalPic', function() {
+        console.log('Picture clicked')
+    })
     //userRuleset.setName(currentItemIndex, "Testing"); //this line would set the name in the internal datamodel...
     //currentItem.model.attr('label/text', "Testing"); //and this line changes the display name 
 });
