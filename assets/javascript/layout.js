@@ -141,6 +141,7 @@ paper.on('element:pointerclick', function (currentItem) {
     $(document).ready(function () {
         $(".resetModalButton").click(function (e) {
             $("#nodeNameInput").val("");
+            $("#nodeNameDisplay").val("");
             $(".picSelectModal").empty();
         });
 

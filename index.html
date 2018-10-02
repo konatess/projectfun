@@ -68,26 +68,31 @@
     <footer class="p-2">&#169; Theresa, Pushpinder, Tassa, Craig</footer>
 
     <!-- Modal header -->
-    <div class="modal fade bd-example-modal-lg inputModal" id="inputModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg inputModal" id="inputModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="nodeNameLabel">Select your RPS++ actor's name</h5>
+                    <h5 class="modal-title" id="nodeNameLabel">Search for an image and give it a display name</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
 
-                <!-- Node's name text bar -->
+                <!-- Node's image search and display name text bars -->
                 <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Node Name:</label>
-                            <input type="text" class="form-control" id="nodeNameInput">
-                            <button type="button" class="btn btn-primary submit">Submit</button>
-                        </div>
-                    </form>
+                    <div class="container">
+                        <form>
+                            <div class="row">
+                                <div class="col">
+                                    <input type="text" class="form-control" id="nodeNameInput" placeholder="Image Search">
+                                </div>
+                                <div class="col">
+                                    <input type="text" class="form-control" id="nodeNameDisplay" placeholder="Display Name">
+                                </div>
+                                <button type="button" class="btn btn-primary submit">Submit</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
 
                 <!-- div for displaying pictures  -->
