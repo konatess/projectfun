@@ -88,14 +88,20 @@
                 <div class="modal-body">
                     <div class="container">
                         <form>
-                            <div class="row">
-                                <div class="col">
-                                    <input type="text" class="form-control" id="nodeNameInput" placeholder="Image Search">
+                            <div class="input-group w-100">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Item Name</span>
                                 </div>
-                                <div class="col">
-                                    <input type="text" class="form-control" id="nodeNameDisplay" placeholder="Display Name">
+                                <input type="text" class="form-control" id="nodeNameDisplay" placeholder="Display Name">
+                            </div>
+                            <div class="input-group w-100 mt-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text px-1" id="basic-addon2">Image Search</span>
                                 </div>
-                                <button type="button" class="btn btn-primary submit">Submit</button>
+                                <input type="text" class="form-control" id="nodeNameInput" placeholder="Image Search">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-success submit">Search</button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -114,7 +120,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary resetModalButton">Reset</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary saveModalButton" data-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-success saveModalButton" data-dismiss="modal">Save</button>
                 </div>
             </div>
         </div>
