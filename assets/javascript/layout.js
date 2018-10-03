@@ -4,7 +4,7 @@ function createNodes() {
     //NOTE: when we generate these guys, we need to give them an onclick so they will open an editing modal 
     //and the user can then put in the name and pick an image
     for (var i = 0; i < userRuleset.totalNodes(); i++) { //NOTE: we may want a better way to reference the nodes
-        var newItem = new joint.shapes.standard.Circle();
+        var newItem = new joint.shapes.standard.BorderedImage();
         newItem.position(5, 10);
         newItem.resize(75, 75);
 
@@ -14,7 +14,7 @@ function createNodes() {
             },
             label: {
                 text: userRuleset.getName(i),
-                fill: 'white'
+                fill: 'red'
             },
             dataindex: {  //NOTE: this 'dataindex' attribute will store the index of the related node in our userRuleset object :)
                 text: i
@@ -73,7 +73,7 @@ function linkNodes() {
             // adjust width of arrow stems can change color with line/stroke, color
             link.attr('line/strokeWidth', 2);
             // adjust size of arrow heads, can also add fill: color
-            link.attr('line/targetMarker', {'d': 'M 20 -10 0 0 20 10 Z'})
+            link.attr('line/targetMarker', {'d': 'M 20 -6 0 0 20 6 Z'})
             // POSSIBLE FUTURE FEATURE
             // puts a label in the middle of each path. 
             // can use this to add custom words
@@ -109,50 +109,65 @@ var paper = new joint.dia.Paper({
 });
 
 var items = []; //array that stores the graph elements to display on our paper
+var currentItemIndex;
+var currentItem;
 
 //VISUALIZATION: ON-CLICK EVENT FOR INDIVIDUAL ITEMS
-paper.on('element:pointerclick', function (currentItem) {
-    var currentItemIndex = currentItem.model.attr('dataindex/text'); //To access the current item's INDEX, we have to use the attribute 'dataindex/text'
+paper.on('element:pointerclick', function (element) {
+    currentItem = element
+    currentItemIndex = element.model.attr('dataindex/text'); //To access the current item's INDEX, we have to use the attribute 'dataindex/text'
     console.log("We have clicked the node " + currentItemIndex);
     //Show the modal 
     $('#inputModal').modal('show');
 
-    $(document).ready(function () {
-        $(".resetModalButton").click(function (e) {
-            $("#nodeNameInput").val("");
-            $("#nodeNameDisplay").val("");
-            $(".picSelectModal").empty();
-        });
+});
 
-        // modal - submit button for the text bar
-        $(".submit").click(function (e) {
-            $(".picSelectModal").html("");
+// $(document).ready(function () {
+    $(".resetModalButton").click(function (e) {
+        $("#nodeNameInput").val("");
+        $("#nodeNameDisplay").val("");
+        $(".picSelectModal").empty();
+    });
 
-            var apiKey = "4cac8681185d926a8cc5a7f2671b3eb5"
-            var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?format=json&tags=" + $("#nodeNameInput").val();
+    // modal - submit button for the text bar
+    $(".submit").click(function (e) {
+        $(".picSelectModal").html("");
 
-            $.ajax({
-                url: flickerAPI,
-                dataType: "jsonp", // jsonp
-                jsonpCallback: 'jsonFlickrFeed', // add this property
-                success: function (result, status, xhr) {
-                    $.each(result.items, function (i, item) {
-                        $("<img>").attr("src", item.media.m).addClass("img img-thumbnail modalPic").appendTo(".picSelectModal");
-                        if (i === 5) {
-                            return false;
-                        }
-                    });
-                },
-                error: function (xhr, status, error) {
-                    console.log(xhr)
-                    $(".picSelectModal").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
-                }
-            });
+        var apiKey = "4cac8681185d926a8cc5a7f2671b3eb5"
+        var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?format=json&tags=" + $("#nodeNameInput").val();
+
+        $.ajax({
+            url: flickerAPI,
+            dataType: "jsonp", // jsonp
+            jsonpCallback: 'jsonFlickrFeed', // add this property
+            success: function (result, status, xhr) {
+                $.each(result.items, function (i, item) {
+                    $("<img>").attr("src", item.media.m).addClass("img img-thumbnail modalPic").appendTo(".picSelectModal");
+                    if (i === 5) {
+                        return false;
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr)
+                $(".picSelectModal").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+            }
         });
     });
-    //userRuleset.setName(currentItemIndex, "Testing"); //this line would set the name in the internal datamodel...
-    //currentItem.model.attr('label/text', "Testing"); //and this line changes the display name 
-});
+// });
+var source;
+var nodeName
+$(document).on('click', '.modalPic', function() {
+    source = $(this).attr('src')
+    console.log('Picture source: ' + source)
+})
+$(document).on('click', '.saveModalButton', function() {
+    nodeName = $('#nodeNameDisplay').val().trim();
+    userRuleset.setName(currentItemIndex, nodeName); //this line would set the name in the internal datamodel...
+    currentItem.model.attr('label/text', nodeName); //and this line changes the display name 
+    userRuleset.setImage(currentItemIndex, source); // Sets image source in Ruleset
+    currentItem.model.attr('image/xlinkHref', source);
+})
 
 //PARSLEY VALIDATOR FOR ODD NUMBERS
 //Allows us to ensure that the user is not passing an even # 
