@@ -1,53 +1,20 @@
-
-//GLOBAL VARIABLES: 
-//GRAPH AREA -- this is where we draw our nodes
-var userRuleset = new Ruleset();
-var graph = new joint.dia.Graph;
-var paper = new joint.dia.Paper({
-    el: document.getElementById('display'),
-    model: graph,
-    width: 350,
-    height: 600,
-    interactive: { elementMove: false, arrowheadMove: false }, //makes the items not draggable, arrows not draggable
-    gridSize: 1
-});
-var items = []; //array that stores the graph elements to display on our paper
-
-//(FOR TESTING PURPOSES: we are going to create blank nodes for userRuleset here)
-var numberOfNodes = 5; //NOTE: we should get this from the user
-
-for (let i = 0; i < numberOfNodes; i++) {
-    userRuleset.addNode();
-}
-userRuleset.setName(0, "Scissors");  //Scissors-Lizard-Paper-Spock-Rock
-userRuleset.setName(1, "Lizard");
-userRuleset.setName(2, "Paper");
-userRuleset.setName(3, "Spock");
-userRuleset.setName(4, "Rock");
-
-
+//CREATE AND DISTRIBUTE ITEMS
 function createNodes() {
-    //to-do: clear out any old items
     items = [];
     //NOTE: when we generate these guys, we need to give them an onclick so they will open an editing modal 
     //and the user can then put in the name and pick an image
     for (var i = 0; i < userRuleset.totalNodes(); i++) { //NOTE: we may want a better way to reference the nodes
-        var newItem = new joint.shapes.standard.Circle();
+        var newItem = new joint.shapes.standard.BorderedImage();
         newItem.position(5, 10);
         newItem.resize(75, 75);
-        // newItem.attr({
-        //     type: "button",
-        //     class: "btn btn-primary",
-        //     dataToggle: "modal",
-        //     dataTarget: ".bd-example-modal-lg",
-        // });
+
         newItem.attr({
             body: {
                 fill: 'green'
             },
             label: {
                 text: userRuleset.getName(i),
-                fill: 'white'
+                fill: 'red'
             },
             dataindex: {  //NOTE: this 'dataindex' attribute will store the index of the related node in our userRuleset object :)
                 text: i
@@ -60,22 +27,19 @@ function createNodes() {
 
 //distributeNodesInCircle()
 //function distributes all existing items into a circle pattern
+//NOTE: this function is intended for all desktop screens; for mobile we'll need to have a different distribution pattern
 function distributeNodesInCircle() {
     var radius = 250;
-    console.log(paper.options.width);
     width = paper.options.width; //width and height are the size of the canvas
     height = paper.options.height;
     // for reasons I have yet to understand, angle 4.72 puts the first item closest to the top
     angle = 4.72, step = (2 * Math.PI) / userRuleset.totalNodes();
-    console.log("Width: " + width, "Height: " + height)
+
     items.forEach(function (currentItem, index) {
         var x = Math.round(width / 2 + radius * Math.cos(angle)) + 100;
         var y = Math.round(height / 2 + radius * Math.sin(angle)) - 50;  //note: we are giving a bit of an offset here because we want this to look centered
-        /* if(window.console) {
-            console.log(index, x, y);
-        } */
-        currentItem.translate(x, y); //move the item to the place we want it to go
-        currentItem.addTo(graph); //add it to our drawing paper
+        currentItem.translate(x, y); //move the existing item to the place we want it to go
+        currentItem.addTo(graph); //add it to our graph
         angle += step;
     });
 }
@@ -109,7 +73,7 @@ function linkNodes() {
             // adjust width of arrow stems can change color with line/stroke, color
             link.attr('line/strokeWidth', 2);
             // adjust size of arrow heads, can also add fill: color
-            link.attr('line/targetMarker', {'d': 'M 20 -10 0 0 20 10 Z'})
+            link.attr('line/targetMarker', {'d': 'M 20 -6 0 0 20 6 Z'})
             // POSSIBLE FUTURE FEATURE
             // puts a label in the middle of each path. 
             // can use this to add custom words
@@ -128,60 +92,129 @@ function linkNodes() {
     }
 }
 
-paper.on('element:pointerclick', function (currentItem) {
-    var currentItemIndex = currentItem.model.attr('dataindex/text'); //To access the current item's INDEX, we have to use the attribute 'dataindex/text'
-    console.log("We have clicked the node " + currentItemIndex);
-    //NOTE: this is where we'd pop up Craig's modal and get the user input for the item's name 
-
-    //  
-    // MODAL STUFF HERE
-    // 
-    $('#inputModal').modal('show');
-
-    $(document).ready(function () {
-        $(".resetModalButton").click(function (e) {
-            $("#nodeNameInput").val("");
-            $("#nodeNameDisplay").val("");
-            $(".picSelectModal").empty();
-        });
-
-        // modal - submit button for the text bar
-        $(".submit").click(function (e) {
-            $(".picSelectModal").html("");
-
-            // var apiKey = "4cac8681185d926a8cc5a7f2671b3eb5"
-
-            var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?format=json&tags=" + $("#nodeNameInput").val();
-
-            $.ajax({
-                url: flickerAPI,
-                dataType: "jsonp", // jsonp
-                jsonpCallback: 'jsonFlickrFeed', // add this property
-                success: function (result, status, xhr) {
-                    $.each(result.items, function (i, item) {
-                        $("<img>").attr("src", item.media.m).addClass("img img-thumbnail modalPic").appendTo(".picSelectModal");
-                        if (i === 5) {
-                            return false;
-                        }
-                    });
-                },
-                error: function (xhr, status, error) {
-                    console.log(xhr)
-                    $(".picSelectModal").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
-                }
-            });
-        });
-    });
-    $(document).on('click', '.modalPic', function() {
-        console.log('Picture clicked')
-    })
-    //userRuleset.setName(currentItemIndex, "Testing"); //this line would set the name in the internal datamodel...
-    //currentItem.model.attr('label/text', "Testing"); //and this line changes the display name 
+//WAIT UNTIL THE DOCUMENT IS READY TO DO THE FOLLOWING:
+$.ready() 
+{
+//GLOBAL VARIABLES: 
+//GRAPH AREA -- this is where we draw our nodes
+var userRuleset = new Ruleset();
+var graph = new joint.dia.Graph;
+var paper = new joint.dia.Paper({
+    el: document.getElementById('display'),
+    model: graph,
+    width: 350,
+    height: 600,
+    interactive: { elementMove: false, arrowheadMove: false }, //makes the items not draggable, arrows not draggable
+    gridSize: 1
 });
 
+var items = []; //array that stores the graph elements to display on our paper
+var currentItemIndex;
+var currentItem;
 
+//VISUALIZATION: ON-CLICK EVENT FOR INDIVIDUAL ITEMS
+paper.on('element:pointerclick', function (element) {
+    currentItem = element
+    currentItemIndex = element.model.attr('dataindex/text'); //To access the current item's INDEX, we have to use the attribute 'dataindex/text'
+    console.log("We have clicked the node " + currentItemIndex);
+    //Show the modal 
+    $('#inputModal').modal('show');
 
-//CODE TO CALL ONCE THE USER HAS INPUT THEIR DESIRED # OF ITEMS:
-createNodes();  // create the nodes
-distributeNodesInCircle(); //(TO-DO): pick which function we use to distribute nodes based on size of the display - mobile or web
-linkNodes();
+});
+
+// $(document).ready(function () {
+    $(".resetModalButton").click(function (e) {
+        $("#nodeNameInput").val("");
+        $("#nodeNameDisplay").val("");
+        $(".picSelectModal").empty();
+    });
+
+    // modal - submit button for the text bar
+    $(".submit").click(function (e) {
+        $(".picSelectModal").html("");
+
+        var apiKey = "4cac8681185d926a8cc5a7f2671b3eb5"
+        var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?format=json&tags=" + $("#nodeNameInput").val();
+
+        $.ajax({
+            url: flickerAPI,
+            dataType: "jsonp", // jsonp
+            jsonpCallback: 'jsonFlickrFeed', // add this property
+            success: function (result, status, xhr) {
+                $.each(result.items, function (i, item) {
+                    $("<img>").attr("src", item.media.m).addClass("img img-thumbnail modalPic").appendTo(".picSelectModal");
+                    if (i === 5) {
+                        return false;
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr)
+                $(".picSelectModal").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+            }
+        });
+    });
+// });
+var source;
+var nodeName
+$(document).on('click', '.modalPic', function() {
+    source = $(this).attr('src')
+    console.log('Picture source: ' + source)
+})
+$(document).on('click', '.saveModalButton', function() {
+    nodeName = $('#nodeNameDisplay').val().trim();
+    userRuleset.setName(currentItemIndex, nodeName); //this line would set the name in the internal datamodel...
+    currentItem.model.attr('label/text', nodeName); //and this line changes the display name 
+    userRuleset.setImage(currentItemIndex, source); // Sets image source in Ruleset
+    currentItem.model.attr('image/xlinkHref', source);
+})
+
+//PARSLEY VALIDATOR FOR ODD NUMBERS
+//Allows us to ensure that the user is not passing an even # 
+window.Parsley
+  .addValidator('isNotDivisibleBy', {
+    requirementType: 'integer',
+    validateNumber: function(value, requirement) {
+      return 0 !== value % requirement;
+    },
+    messages: {
+      en: 'This value must be an odd number',
+    }
+  });
+
+//GENERATE NODES BASED ON HOW MANY WE ASKED FOR
+//Listener for our item slider
+//Each time the item slider changes value, this function will reset the graph & redraw it
+//NOTE: Let's think through how we want this to long-term behave when someone sets names/images for items, then reduces the # of items...
+//My proposal is that instead of erasing the ruleset (like below), we merely change the cap on its length 
+//That will require some tweaks to the graph class / the link nodes function
+$('#item-slider').on('input', function () {
+    var numberOfNodes = parseInt($(this).val()); //grab the current value of the slider
+    $("#number-of-items").text(numberOfNodes);
+    //NOTE: This is not a good long-term solution!  We would ideally like to add/delete nodes to what is already there, instead of erasing progress
+    //Clear out our existing graph...
+    graph.clear();
+
+    //...and start over with a blank ruleset object
+    userRuleset = new Ruleset();
+
+    //Generate the requested number of nodes
+    for (let i = 0; i < numberOfNodes; i++) {
+        userRuleset.addNode();
+    }
+
+    createNodes();  // now create the graphical nodes
+    distributeNodesInCircle(); //(TO-DO): pick which function we use to distribute nodes based on size of the display - mobile or web
+    linkNodes();
+});
+
+//WHEN THE PAGE LOADS, SHOW A DEFAULT EXAMPLE RULESET 
+//Note: eventually this will only show if you are not logged in / do not have a saved game
+    userRuleset.addNode("rock");
+    userRuleset.addNode("scissors");
+    userRuleset.addNode("paper");
+    createNodes();  // create the graphical nodes
+    distributeNodesInCircle(); //(TO-DO): pick which function we use to distribute nodes based on size of the display - mobile or web
+    linkNodes();
+
+}

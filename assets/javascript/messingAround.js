@@ -91,20 +91,20 @@ var graph = new joint.dia.Graph;
         //     alert(message)
         // });
 
-        joint.shapes.Element.define('standard.BorderedImage', {
-            attrs: {
-                body: {
-                    rx: "50%"
-                }
-            },
-            markup: [{
-                tagName: 'rect',
-                selector: 'body',
-            }, {
-                tagName: 'text',
-                selector: 'label'
-            }]
-        })
+        // joint.shapes.Element.define('standard.BorderedImage', {
+        //     attrs: {
+        //         body: {
+        //             rx: "50%"
+        //         }
+        //     },
+        //     markup: [{
+        //         tagName: 'rect',
+        //         selector: 'body',
+        //     }, {
+        //         tagName: 'text',
+        //         selector: 'label'
+        //     }]
+        // })
 
 
         var borderedImage = new joint.shapes.standard.BorderedImage();
