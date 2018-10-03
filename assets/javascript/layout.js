@@ -111,6 +111,8 @@ var paper = new joint.dia.Paper({
 var items = []; //array that stores the graph elements to display on our paper
 var currentItemIndex;
 var currentItem;
+var source;
+var nodeName
 
 //VISUALIZATION: ON-CLICK EVENT FOR INDIVIDUAL ITEMS
 paper.on('element:pointerclick', function (element) {
@@ -118,6 +120,11 @@ paper.on('element:pointerclick', function (element) {
     currentItemIndex = element.model.attr('dataindex/text'); //To access the current item's INDEX, we have to use the attribute 'dataindex/text'
     console.log("We have clicked the node " + currentItemIndex);
     //Show the modal 
+    source = "";
+    nodeName = "";
+    $("#nodeNameInput").val("");
+    $("#nodeNameDisplay").val(userRuleset.getName(currentItemIndex));
+    $(".picSelectModal").empty();
     $('#inputModal').modal('show');
 
 });
@@ -155,8 +162,6 @@ paper.on('element:pointerclick', function (element) {
         });
     });
 // });
-var source;
-var nodeName
 $(document).on('click', '.modalPic', function() {
     source = $(this).attr('src')
     console.log('Picture source: ' + source)
@@ -165,8 +170,10 @@ $(document).on('click', '.saveModalButton', function() {
     nodeName = $('#nodeNameDisplay').val().trim();
     userRuleset.setName(currentItemIndex, nodeName); //this line would set the name in the internal datamodel...
     currentItem.model.attr('label/text', nodeName); //and this line changes the display name 
-    userRuleset.setImage(currentItemIndex, source); // Sets image source in Ruleset
-    currentItem.model.attr('image/xlinkHref', source);
+    if (source !== "") {
+        userRuleset.setImage(currentItemIndex, source); // Sets image source in Ruleset
+        currentItem.model.attr('image/xlinkHref', source);
+    }
 })
 
 //PARSLEY VALIDATOR FOR ODD NUMBERS
