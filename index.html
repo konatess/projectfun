@@ -28,6 +28,7 @@
                 <h2>Rock Paper Scissors Game Generator</h2>
             </header>
         </div>
+   
         <div class="row pb-2">
             <nav class="col-12 navbar navbar-expand-lg navbar-dark bg-dark">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -36,58 +37,68 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="save-menu navbar-nav mr-auto">
+                    <!-- The sign in/out functionality will automatically populate this-->
+                    </ul>
                     <ul class="signin-menu navbar-nav ml-auto">
+                    <!-- The sign in/out functionality will automatically populate this-->
                     </ul>
                 </div>
+
             </nav>
         </div>
+
+    </div>
+
+    <div class="container">
         <!-- container for whole body so that we can manipulate borders etc -->
         <div class="whole-body row mx-1">
-            <!-- area to display the nodes in circle format -->
-            <!-- we can also do the initial set up inputs in this area -->
-            <div id="display" class="col-md-7 position-relative">
 
-            </div>
             <!-- area for instructions, play buttons, display for chatting with other players, etc -->
-            <div class="text-area col-md-5 pt-2 pr-5">
-                <h3>Instructions</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                    culpa qui officia deserunt mollit anim id est laborum.</p>
-                <p>Non eram nescius, Brute, cum, quae summis ingeniis exquisitaque doctrina philosophi Graeco sermone
-                    tractavissent, ea Latinis litteris mandaremus, fore ut hic noster labor in varias reprehensiones
-                    incurreret. nam quibusdam, et iis quidem non admodum indoctis, totum hoc displicet philosophari.
-                    quidam autem non tam id reprehendunt, si remissius agatur, sed tantum studium tamque multam operam
-                    ponendam in eo non arbitrantur. erunt etiam, et ii quidem eruditi Graecis litteris.</p>
+            <div class="text-area col-12 col-lg-4 pt-2 pr-5 mb-2">
+                <h3>Game Name</h3>
+                <!-- Slider to create a game with a certain number of items -->
+                <label for="item-slider">Number of Items:<span id="number-of-items">3</span></label>
+                <input type="range" class="slider" name="slider-step" id="item-slider" value="3" min="3" max="15" step="2" />
             </div>
+
+           <!-- area to display the nodes in circle format -->
+            <!-- we can also do the initial set up inputs in this area -->
+            <div id="display" class="col-12 col-lg-8 position-relative">
+            </div>
+
         </div>
     </div>
+</div>
     <!-- footer with copywrite, and we can put other credits and things here later if we need/want -->
     <footer class="p-2">&#169; Theresa, Pushpinder, Tassa, Craig</footer>
 
     <!-- Modal header -->
-    <div class="modal fade bd-example-modal-lg inputModal" id="inputModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg inputModal" id="inputModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="nodeNameLabel">Select your RPS++ actor's name</h5>
+                    <h5 class="modal-title" id="nodeNameLabel">Search for an image and give it a display name</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
 
-                <!-- Node's name text bar -->
+                <!-- Node's image search and display name text bars -->
                 <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Node Name:</label>
-                            <input type="text" class="form-control" id="nodeNameInput">
-                            <button type="button" class="btn btn-primary submit">Submit</button>
-                        </div>
-                    </form>
+                    <div class="container">
+                        <form>
+                            <div class="row">
+                                <div class="col">
+                                    <input type="text" class="form-control" id="nodeNameInput" placeholder="Image Search">
+                                </div>
+                                <div class="col">
+                                    <input type="text" class="form-control" id="nodeNameDisplay" placeholder="Display Name">
+                                </div>
+                                <button type="button" class="btn btn-primary submit">Submit</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
 
                 <!-- div for displaying pictures  -->
