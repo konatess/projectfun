@@ -10,7 +10,8 @@ function createNodes() {
 
         newItem.attr({
             body: {
-                fill: 'green'
+                fill: 'green',
+                rx: '50%'
             },
             label: {
                 text: userRuleset.getName(i),
@@ -163,6 +164,8 @@ paper.on('element:pointerclick', function (element) {
     });
 // });
 $(document).on('click', '.modalPic', function() {
+    $('.modalPic').removeClass('selected-image');
+    $(this).addClass('selected-image');
     source = $(this).attr('src')
     console.log('Picture source: ' + source)
 })
