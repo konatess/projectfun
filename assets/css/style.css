@@ -61,3 +61,7 @@ footer {
     background: #4CAF50;
     cursor: pointer;
 }
+
+.selected-image {
+    border: solid 2px #333
+}
