@@ -199,30 +199,107 @@ window.Parsley
 //My proposal is that instead of erasing the ruleset (like below), we merely change the cap on its length 
 //That will require some tweaks to the graph class / the link nodes function
 $('#item-slider').on('input', function () {
-    var numberOfNodes = parseInt($(this).val()); //grab the current value of the slider
-    $("#number-of-items").text(numberOfNodes);
-    //NOTE: This is not a good long-term solution!  We would ideally like to add/delete nodes to what is already there, instead of erasing progress
-    //Clear out our existing graph...
-    graph.clear();
+    //first, grab the current value of the slider 
+    const newNumberOfNodes = parseInt($(this).val()); 
 
-    //...and start over with a blank ruleset object
-    userRuleset = new Ruleset();
+    //Check if we are INCREASING or DECREASING the current # of nodes
+    const originalNumberOfNodes = userRuleset.totalNodes();
+    const netChange = newNumberOfNodes - originalNumberOfNodes;
+    //Easy case is increasing - simply add more blank nodes!
+    if(netChange>0) {
+        console.log("Adding nodes!");   
+        for (let i = 0; i < netChange; i++) {
+            userRuleset.addNode();
+        } 
+        //We should then immediately update what the user sees!
+        $("#number-of-items").text(newNumberOfNodes); //change the number on the slider label
+        //NOTE: We should do something different if it's on mobile vs web!
 
-    //Generate the requested number of nodes
-    for (let i = 0; i < numberOfNodes; i++) {
-        userRuleset.addNode();
+        //THE FULL-SIZE VERSION:
+        graph.clear(); //Clear out our existing visualization...
+        createNodes(); //Create new items to go on the graph...  
+        distributeNodesInCircle(); //distribute the items in a circle...
+        linkNodes();
     }
+    //otherwise, if we are DELETING nodes...we need to pause for the user to tell us 'yes' or 'no' ;)
+    else if(netChange<0) { 
+        //first, check if we will delete any of the user's custom work!
+        //it's okay if we are deleting blank nodes...but if they've set a name or image for anything, give a warning.
+        var userWillLoseProgress = false;  //start by assuming we have not lost progress...
+        for(let j=originalNumberOfNodes-1; j>=newNumberOfNodes; j--) {  //then quickly walk backwards through the number of nodes 
+            if(userRuleset.getName(j)!=="" || userRuleset.getImage(j)!=="") { //if the user has set a name or image for an item, we have to warn them!
+                userWillLoseProgress = true; 
+                break; //we only need to search until we find at least one thing that will be deleted
+            }
+        }
 
-    createNodes();  // now create the graphical nodes
-    distributeNodesInCircle(); //(TO-DO): pick which function we use to distribute nodes based on size of the display - mobile or web
-    linkNodes();
+        if(userWillLoseProgress) {
+        //if they will lose progress, we will then pop up a warning message in our generic modal!
+            $("#genericModalLabel").text("Confirm Deletion");
+            $("#genericModalBody").html("<p>Reducing the size of your game now will delete the last " + Math.abs(netChange) + " items you've created! Are you sure you want to proceed?</p>");
+            //create a cancel button
+            var cancelBtn = $("<button>");
+            cancelBtn.text("Cancel");
+            cancelBtn.addClass("btn btn-secondary");
+            //...and add a function that just closes the dialog box when cancelled
+            cancelBtn.on("click", function(){
+                //change the slider position back to where it original was...
+                const originalSliderPosition = Math.abs(netChange) + newNumberOfNodes;
+                $("#item-slider").val(originalSliderPosition);
+                //and hide the modal
+                $("#genericModal").modal("hide");
+                
+            });
+            //create a confirm button
+            var confirmBtn = $("<button>");
+            confirmBtn.text("Yes, delete my work");
+            confirmBtn.addClass("btn btn-warning");
+            //...and add a function that WILL delete items and update the display when clicked!
+            confirmBtn.on("click", function(){
+                for(let k=originalNumberOfNodes-1; k>=newNumberOfNodes; k--) { //walk backwards through the userRuleset deleting nodes
+                    userRuleset.deleteNode(k);
+                }
+                $("#number-of-items").text(newNumberOfNodes); //change the number on the slider label
+                //NOTE: need to do something different for mobile vs web!
+
+                //WEB VERSION:
+                graph.clear(); //Clear out our existing visualization...
+                createNodes(); //Create new items to go on the graph...  
+                distributeNodesInCircle(); //distribute the items in a circle...
+                linkNodes();
+                //and hide the modal
+                $("#genericModal").modal("hide");
+            });
+            //empty the current generic modal footer buttons and append our custom ones
+            $("#genericModalFooter").empty();
+            $("#genericModalFooter").append(cancelBtn);
+            $("#genericModalFooter").append(confirmBtn);
+            //and show the modal!
+            $("#genericModal").modal("show");
+        }
+        //otherwise, if the user will NOT lose progress...just delete the nodes immediately!
+        else {
+            for(let m=originalNumberOfNodes-1; m>=newNumberOfNodes; m--) { //walk backwards through the userRuleset deleting nodes
+                userRuleset.deleteNode(m);
+            }
+            $("#number-of-items").text(newNumberOfNodes); //change the number on the slider label
+            //NOTE: need to do something different for mobile vs web!
+
+            //WEB VERSION:
+            graph.clear(); //Clear out our existing visualization...
+            createNodes(); //Create new items to go on the graph...  
+            distributeNodesInCircle(); //distribute the items in a circle...
+            linkNodes();
+        }
+    }   
+
 });
 
 //WHEN THE PAGE LOADS, SHOW A DEFAULT EXAMPLE RULESET 
 //Note: eventually this will only show if you are not logged in / do not have a saved game
-    userRuleset.addNode("rock");
-    userRuleset.addNode("scissors");
-    userRuleset.addNode("paper");
+    userRuleset.addNode("Click me to get started!");
+    userRuleset.addNode("");
+    userRuleset.addNode("");
     createNodes();  // create the graphical nodes
     distributeNodesInCircle(); //(TO-DO): pick which function we use to distribute nodes based on size of the display - mobile or web
     linkNodes();
