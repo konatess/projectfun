@@ -26,6 +26,25 @@ function createNodes() {
     }
 }
 
+function createMobileNodes() {
+    items = [];
+    for (var i = 0; i < userRuleset.totalNodes(); i++) { //NOTE: we may want a better way to reference the nodes
+        var newItem = $('<div>');
+        newItem.addClass('card bg-light mb-3');
+        newItem.attr('data-index', i);
+        var newHeader = $('<div>');
+        newHeader.addClass('card-header');
+        newHeader.text('Hello')
+        var newBody = $('<div>');
+        newBody.addClass('card-body');
+        newItem.append(newHeader, newBody);
+
+        items.push(newItem); //hold an array of these new items 
+        $('#display').append(newItem)
+    }
+
+}
+
 //distributeNodesInCircle()
 //function distributes all existing items into a circle pattern
 //NOTE: this function is intended for all desktop screens; for mobile we'll need to have a different distribution pattern
@@ -43,6 +62,10 @@ function distributeNodesInCircle() {
         currentItem.addTo(graph); //add it to our graph
         angle += step;
     });
+}
+
+function distributeNodesInLine() {
+
 }
 
 
@@ -97,6 +120,13 @@ function linkNodes() {
 $.ready() 
 {
 //GLOBAL VARIABLES: 
+var items = []; //array that stores the graph elements to display on our paper
+var currentItemIndex;
+var currentItem;
+var source;
+var nodeName;
+var screenSmall = window.matchMedia("(max-width: 640px)")
+
 //GRAPH AREA -- this is where we draw our nodes
 var userRuleset = new Ruleset();
 var graph = new joint.dia.Graph;
@@ -109,11 +139,7 @@ var paper = new joint.dia.Paper({
     gridSize: 1
 });
 
-var items = []; //array that stores the graph elements to display on our paper
-var currentItemIndex;
-var currentItem;
-var source;
-var nodeName
+
 
 //VISUALIZATION: ON-CLICK EVENT FOR INDIVIDUAL ITEMS
 paper.on('element:pointerclick', function (element) {
@@ -213,9 +239,15 @@ $('#item-slider').on('input', function () {
         userRuleset.addNode();
     }
 
-    createNodes();  // now create the graphical nodes
-    distributeNodesInCircle(); //(TO-DO): pick which function we use to distribute nodes based on size of the display - mobile or web
-    linkNodes();
+    if (screenSmall) {
+        $('.joint-paper').remove();
+        createMobileNodes();
+    }
+    else {
+        createNodes();  // now create the graphical nodes
+        distributeNodesInCircle(); //(TO-DO): pick which function we use to distribute nodes based on size of the display - mobile or web
+        linkNodes();
+    }
 });
 
 //WHEN THE PAGE LOADS, SHOW A DEFAULT EXAMPLE RULESET 
@@ -223,8 +255,15 @@ $('#item-slider').on('input', function () {
     userRuleset.addNode("rock");
     userRuleset.addNode("scissors");
     userRuleset.addNode("paper");
-    createNodes();  // create the graphical nodes
-    distributeNodesInCircle(); //(TO-DO): pick which function we use to distribute nodes based on size of the display - mobile or web
-    linkNodes();
-
+    if (screenSmall.matches) {
+        $('.joint-paper').remove();
+    }
+    else {
+        createNodes();  // now create the graphical nodes
+        distributeNodesInCircle(); //(TO-DO): pick which function we use to distribute nodes based on size of the display - mobile or web
+        linkNodes();
+    }
 }
+
+myFunction(screenSmall) // Call listener function at run time
+screenSmall.addListener(myFunction) // Attach listener function on state changes

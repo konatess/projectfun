@@ -5,12 +5,8 @@ html, body {
 }
 
 * {
-    /* font-family: 'Raleway', sans-serif; */
-    /* font-family: 'Poppins', sans-serif; */
     font-family: 'Quicksand', sans-serif;
-    /* font-family: 'Comfortaa', cursive; */
-    /* font-family: 'ABeeZee', sans-serif; */
-    /* font-family: 'Poiret One', cursive; */
+    cursor: auto;
 }
 
 header, footer {
@@ -65,3 +61,7 @@ footer {
 .selected-image {
     border: solid 2px #333
 }
+
+image {
+    cursor: pointer;
+ }
