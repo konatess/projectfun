@@ -43,7 +43,7 @@ function Ruleset() {
 
     this.minNodes = 3; // number of nodes we MUST have in order to make a valid game
     this.maxNodes = 15; // max number of nodes we can have to make a valid game
-
+    this.title = "Game Title"; //title of the game
 // CREATE METHODS
 // addNode(newNodeName, newNodeImage)
 // Add a brand new item (node) to the Ruleset
@@ -193,6 +193,10 @@ this.totalEdges = function() {
 //returns true if the ruleset is complete, returns false if the ruleset is not complete
 //10.2.18 UPDATE -- per group discussion, games will now FAIL to be valid if the user didn't pick both an image and a name for each node!
     this.isValid = function() {
+        //check if the game has a title - if not, it's invalid
+        if(this.title==="") {
+            return false;
+        }
         //check if we have the right # of nodes -- must be between the min & max # of nodes, and an odd #
         if(this.allNodes.length<this.minNodes || !this.allNodes.length>this.maxNodes || this.allNodes.length%2===0) {
             console.log("Not a valid game - wrong # of nodes!");
@@ -354,7 +358,7 @@ vanillaRPS.consoleLogAll();  */
 
 //example of adding a game and then deleting nodes within it!
 //here's how easy it is to create 'rock-paper-scissors-lizard-spock'!
- console.log("======BIG BANG THEORY EXAMPLE========");
+/*  console.log("======BIG BANG THEORY EXAMPLE========");
 var bigBangTheoryGame = new Ruleset();
 bigBangTheoryGame.addNode("spock", "spock.jpg");
 bigBangTheoryGame.addNode("scissors", "scissors.jpg");
@@ -362,21 +366,9 @@ bigBangTheoryGame.addNode("paper", "paper.jpg");
 bigBangTheoryGame.addNode("rock", "rock.jpg");
 bigBangTheoryGame.addNode("lizard", "lizard.jpg");
 bigBangTheoryGame.toggleEdge(2); //we have to reverse the direction for the 'two-away' steps
-bigBangTheoryGame.compile();
+bigBangTheoryGame.compile(); */
 //bigBangTheoryGame.consoleLogAll(); //and we can see that we have a fully fledged 5-node game!
-//This loop let you fight every possible combination within the game and see what happens
-for(let p=0; p<bigBangTheoryGame.totalNodes(); p++) {
-var compareIndex = p; 
-for(let i=0; i<bigBangTheoryGame.totalNodes(); i++) {
-    console.log("Comparing " + bigBangTheoryGame.getName(compareIndex) + " to " + bigBangTheoryGame.getName(i));
-    if(bigBangTheoryGame.compare(compareIndex, i)) {
-        console.log(bigBangTheoryGame.getName(compareIndex) + " wins!");
-    }
-    else {
-        console.log(bigBangTheoryGame.getName(compareIndex) + " loses :(");
-    }
-    }
-}
+
 //what if we wanted to delete items?  Let's see...
 /* console.log("======DELETE ONE NODE========");  
 bigBangTheoryGame.deleteNode(0); //delete the first node...taking us down to just four
