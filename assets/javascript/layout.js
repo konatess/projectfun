@@ -1,4 +1,22 @@
 //CREATE AND DISTRIBUTE ITEMS
+
+// function to redraw items for each change on screens larger than mobile
+function drawWeb() {
+    createNodes();  // now create the graphical nodes
+    distributeNodesInCircle(); 
+    linkNodes();
+}
+
+// function to redraw items for each change on mobile size screens
+function drawMobile() {
+    $('#display').remove();
+    console.log('Paper removed');
+    var newDisplay = $('<div>');
+    newDisplay.attr('id', 'display');
+    newDisplay.addClass('col-12 text-center')
+    $('.whole-body').append(newDisplay)
+    createMobileNodes();
+}
 function createNodes() {
     items = [];
     //NOTE: when we generate these guys, we need to give them an onclick so they will open an editing modal 
@@ -26,6 +44,36 @@ function createNodes() {
     }
 }
 
+function createMobileNodes() {
+    items = [];
+    console.log('createMobileNodes called')
+    for (var i = 0; i < userRuleset.totalNodes(); i++) { //NOTE: we may want a better way to reference the nodes
+        var itemName = userRuleset.getName(i);
+        if (!itemName) {
+            itemName = 'click to add name or image'
+        }
+        var itemImage = userRuleset.getImage(i);
+        var newItem = $('<div>'); // Add new node container
+        newItem.addClass('card bg-light mb-1');
+        newItem.attr('data-index', i);
+        var newBody = $('<div>');
+        newBody.text(itemName)
+        newBody.addClass('card-body');
+        var newImage = $('<img src="' + itemImage + '">');
+        newImage.addClass('rounded float-left');
+        newBody.prepend(newImage)
+        newItem.append(newBody);
+        console.log(newItem)
+
+        items.push(newItem); //hold an array of these new items 
+        $('#display').append(newItem)
+        if (i < (userRuleset.totalNodes() - 1)) {
+            $('#display').append('defeats');
+        }
+    }
+
+}
+
 //distributeNodesInCircle()
 //function distributes all existing items into a circle pattern
 //NOTE: this function is intended for all desktop screens; for mobile we'll need to have a different distribution pattern
@@ -45,6 +93,23 @@ function distributeNodesInCircle() {
     });
 }
 
+function distributeNodesInLine() {
+    var stepNumber = (i + 1) * userRuleset.edges[i]; //the edges array holds directionality as 1 (clockwise) and -1 (counterclockwise)
+    const totalNodes = userRuleset.totalNodes(); //total number of items we have -- aka the total # of items we have
+    items.forEach(function (currentItem, index) {
+        //figure out where our target is 
+        var targetIndex = index + stepNumber;
+        //make sure that target index doesn't exceed the bounds of our array!
+        if (targetIndex < 0) {  //if we have gone below the START of the array, adjust our goals
+            targetIndex = totalNodes + targetIndex;
+        }
+        else if (targetIndex >= totalNodes) { //OR if we have gone past the END of the array
+            //figure out how much we overshot by:
+            targetIndex = targetIndex - totalNodes;
+        }
+    });
+}
+
 
 //linkNodes() 
 //this is a function that will link all nodes based on the number of steps currently stored in the ruleset (and the directionality of them)
@@ -53,7 +118,7 @@ function distributeNodesInCircle() {
 //in traditional rock-scissors-paper, each item defeats the item immediately adjacent to it ('one away'). We are calling that "step 1".
 function linkNodes() {
     //for as many 'steps' as we have, we are going to link items!
-    for (let i = 0; i < userRuleset.edges.length; i++) {
+    for (let i = 0; i < userRuleset.totalEdges(); i++) {
         var stepNumber = (i + 1) * userRuleset.edges[i]; //the edges array holds directionality as 1 (clockwise) and -1 (counterclockwise)
         const totalNodes = userRuleset.totalNodes(); //total number of items we have -- aka the total # of items we have
         items.forEach(function (currentItem, index) {
@@ -97,6 +162,13 @@ function linkNodes() {
 $.ready() 
 {
 //GLOBAL VARIABLES: 
+var items = []; //array that stores the graph elements to display on our paper
+var currentItemIndex;
+var currentItem;
+var source;
+var nodeName;
+var screenSmall = window.matchMedia("(max-width: 640px)")
+
 //GRAPH AREA -- this is where we draw our nodes
 var userRuleset = new Ruleset();
 var graph = new joint.dia.Graph;
@@ -109,13 +181,10 @@ var paper = new joint.dia.Paper({
     gridSize: 1
 });
 
-var items = []; //array that stores the graph elements to display on our paper
-var currentItemIndex;
-var currentItem;
-var source;
-var nodeName
+
 
 //VISUALIZATION: ON-CLICK EVENT FOR INDIVIDUAL ITEMS
+// WEB VERSION
 paper.on('element:pointerclick', function (element) {
     currentItem = element
     currentItemIndex = element.model.attr('dataindex/text'); //To access the current item's INDEX, we have to use the attribute 'dataindex/text'
@@ -130,39 +199,42 @@ paper.on('element:pointerclick', function (element) {
 
 });
 
-// $(document).ready(function () {
-    $(".resetModalButton").click(function (e) {
-        $("#nodeNameInput").val("");
-        $("#nodeNameDisplay").val("");
-        $(".picSelectModal").empty();
+// MOBILE VERSION
+$('.card').on('click', function(element) {
+
+});
+
+$(".resetModalButton").click(function (e) {
+    $("#nodeNameInput").val("");
+    $("#nodeNameDisplay").val("");
+    $(".picSelectModal").empty();
+});
+
+// modal - submit button for the text bar
+$(".submit").click(function (e) {
+    $(".picSelectModal").html("");
+
+    var apiKey = "4cac8681185d926a8cc5a7f2671b3eb5"
+    var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?format=json&tags=" + $("#nodeNameInput").val();
+
+    $.ajax({
+        url: flickerAPI,
+        dataType: "jsonp", // jsonp
+        jsonpCallback: 'jsonFlickrFeed', // add this property
+        success: function (result, status, xhr) {
+            $.each(result.items, function (i, item) {
+                $("<img>").attr("src", item.media.m).addClass("img img-thumbnail modalPic").appendTo(".picSelectModal");
+                if (i === 5) {
+                    return false;
+                }
+            });
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr)
+            $(".picSelectModal").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+        }
     });
-
-    // modal - submit button for the text bar
-    $(".submit").click(function (e) {
-        $(".picSelectModal").html("");
-
-        var apiKey = "4cac8681185d926a8cc5a7f2671b3eb5"
-        var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?format=json&tags=" + $("#nodeNameInput").val();
-
-        $.ajax({
-            url: flickerAPI,
-            dataType: "jsonp", // jsonp
-            jsonpCallback: 'jsonFlickrFeed', // add this property
-            success: function (result, status, xhr) {
-                $.each(result.items, function (i, item) {
-                    $("<img>").attr("src", item.media.m).addClass("img img-thumbnail modalPic").appendTo(".picSelectModal");
-                    if (i === 5) {
-                        return false;
-                    }
-                });
-            },
-            error: function (xhr, status, error) {
-                console.log(xhr)
-                $(".picSelectModal").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
-            }
-        });
-    });
-// });
+});
 $(document).on('click', '.modalPic', function() {
     $('.modalPic').removeClass('selected-image');
     $(this).addClass('selected-image');
@@ -214,12 +286,13 @@ $('#item-slider').on('input', function () {
         //We should then immediately update what the user sees!
         $("#number-of-items").text(newNumberOfNodes); //change the number on the slider label
         //NOTE: We should do something different if it's on mobile vs web!
-
-        //THE FULL-SIZE VERSION:
-        graph.clear(); //Clear out our existing visualization...
-        createNodes(); //Create new items to go on the graph...  
-        distributeNodesInCircle(); //distribute the items in a circle...
-        linkNodes();
+        if (screenSmall.matches) {
+            drawMobile();
+        }
+        else {
+            graph.clear(); //Clear out our existing visualization...
+            drawWeb();
+        }
     }
     //otherwise, if we are DELETING nodes...we need to pause for the user to tell us 'yes' or 'no' ;)
     else if(netChange<0) { 
@@ -260,13 +333,13 @@ $('#item-slider').on('input', function () {
                     userRuleset.deleteNode(k);
                 }
                 $("#number-of-items").text(newNumberOfNodes); //change the number on the slider label
-                //NOTE: need to do something different for mobile vs web!
-
-                //WEB VERSION:
-                graph.clear(); //Clear out our existing visualization...
-                createNodes(); //Create new items to go on the graph...  
-                distributeNodesInCircle(); //distribute the items in a circle...
-                linkNodes();
+                if (screenSmall.matches) {
+                    drawMobile();
+                }
+                else {
+                    graph.clear(); //Clear out our existing visualization...
+                    drawWeb();
+                }
                 //and hide the modal
                 $("#genericModal").modal("hide");
             });
@@ -283,16 +356,16 @@ $('#item-slider').on('input', function () {
                 userRuleset.deleteNode(m);
             }
             $("#number-of-items").text(newNumberOfNodes); //change the number on the slider label
-            //NOTE: need to do something different for mobile vs web!
-
-            //WEB VERSION:
-            graph.clear(); //Clear out our existing visualization...
-            createNodes(); //Create new items to go on the graph...  
-            distributeNodesInCircle(); //distribute the items in a circle...
-            linkNodes();
+            if (screenSmall.matches) {
+                drawMobile();
+            }
+            else {
+                graph.clear(); //Clear out our existing visualization...
+                drawWeb();
+            }
+            
         }
     }   
-
 });
 
 //WHEN THE PAGE LOADS, SHOW A DEFAULT EXAMPLE RULESET 
@@ -300,8 +373,13 @@ $('#item-slider').on('input', function () {
     userRuleset.addNode("Click me to get started!");
     userRuleset.addNode("");
     userRuleset.addNode("");
-    createNodes();  // create the graphical nodes
-    distributeNodesInCircle(); //(TO-DO): pick which function we use to distribute nodes based on size of the display - mobile or web
-    linkNodes();
-
+    if (screenSmall.matches) {
+        drawMobile();
+    }
+    else {
+        drawWeb();
+    }
 }
+
+// myFunction(screenSmall) // Call listener function at run time
+// screenSmall.addListener(myFunction) // Attach listener function on state changes
