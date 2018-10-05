@@ -19,8 +19,16 @@ function Node(newName, newImg="") {
         this.adjacent.push(otherNode);
         /* this.verbs.push(newVerb);  */
     };
-    //(TO-DO) remove(otherNode) -- removes an association with another node by removing that node from the'defeatsNodes'
-    //NOTE: we want to do this without leaving holes -- needs to CONTRACT the array
+    this.winsAgainst = function(otherNode) {
+        //checks if another node exists already in our adjacents array
+        //if so, that means we win! return the index to the item 
+        for(let b=0; b<this.adjacent.length; b++) {
+            if(this.adjacent[b]===otherNode) {
+                return b;
+            }
+        }
+        return 0;
+    };
 }
 
 //CLASS: RULESET
@@ -272,6 +280,19 @@ this.compile = function(){
     return true;
 };
 
+//compare(indexOne, indexTwo) 
+//This function will determine if the node found at indexOne defeats the node found at indexTwo
+//ASSUMES the game has been compiled
+//ASSUMES the indexes are for two nodes in-range of the array
+this.compare = function(indexOne, indexTwo) {
+    var firstNode = this.allNodes[indexOne];
+    var secondNode = this.allNodes[indexTwo];
+    if(firstNode.winsAgainst(secondNode)) {
+        return true;
+    }
+    return false;
+};
+
 //FOR DEBUGGING PURPOSES:
 //console log everything in the ruleset -- nodes, then their associations
     this.consoleLogAll = function() {
@@ -316,7 +337,7 @@ this.compile = function(){
 };
 
 //Example of starting a totally blank game and then just updating the node names/images as we define them!
-/* console.log("======TRADITIONAL ROCK PAPER SCISSORS EXAMPLE========");
+/*  console.log("======TRADITIONAL ROCK PAPER SCISSORS EXAMPLE========");
 var vanillaRPS = new Ruleset();
 vanillaRPS.addNode();
 vanillaRPS.addNode();
@@ -331,7 +352,7 @@ vanillaRPS.compile();
 vanillaRPS.consoleLogAll();  */
 
 
-/* //example of adding a game and then deleting nodes within it!
+//example of adding a game and then deleting nodes within it!
 //here's how easy it is to create 'rock-paper-scissors-lizard-spock'!
  console.log("======BIG BANG THEORY EXAMPLE========");
 var bigBangTheoryGame = new Ruleset();
@@ -342,15 +363,28 @@ bigBangTheoryGame.addNode("rock", "rock.jpg");
 bigBangTheoryGame.addNode("lizard", "lizard.jpg");
 bigBangTheoryGame.toggleEdge(2); //we have to reverse the direction for the 'two-away' steps
 bigBangTheoryGame.compile();
-bigBangTheoryGame.consoleLogAll(); //and we can see that we have a fully fledged 5-node game!
+//bigBangTheoryGame.consoleLogAll(); //and we can see that we have a fully fledged 5-node game!
+//This loop let you fight every possible combination within the game and see what happens
+for(let p=0; p<bigBangTheoryGame.totalNodes(); p++) {
+var compareIndex = p; 
+for(let i=0; i<bigBangTheoryGame.totalNodes(); i++) {
+    console.log("Comparing " + bigBangTheoryGame.getName(compareIndex) + " to " + bigBangTheoryGame.getName(i));
+    if(bigBangTheoryGame.compare(compareIndex, i)) {
+        console.log(bigBangTheoryGame.getName(compareIndex) + " wins!");
+    }
+    else {
+        console.log(bigBangTheoryGame.getName(compareIndex) + " loses :(");
+    }
+    }
+}
 //what if we wanted to delete items?  Let's see...
-console.log("======DELETE ONE NODE========");  
+/* console.log("======DELETE ONE NODE========");  
 bigBangTheoryGame.deleteNode(0); //delete the first node...taking us down to just four
 bigBangTheoryGame.compile(); //NOTE: this compile operation will now fail, since four items is not a valid game
 console.log("======DELETE TWO NODES========");
 bigBangTheoryGame.deleteNode(3); //okay, let's delete one more item then
 bigBangTheoryGame.compile(); //this time the game WILL compile, because three nodes is a valid game!
 bigBangTheoryGame.consoleLogAll();
- */
+ */ 
 
 
