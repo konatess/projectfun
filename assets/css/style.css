@@ -65,3 +65,8 @@ footer {
 image {
     cursor: pointer;
  }
+
+.width-override {
+    max-width: 30% !important;
+    max-height: 90px !important; 
+}
