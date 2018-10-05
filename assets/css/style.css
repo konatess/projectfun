@@ -67,5 +67,6 @@ image {
  }
 
 .width-override {
-    max-width: 30% !important; 
+    max-width: 30% !important;
+    max-height: 90px !important; 
 }

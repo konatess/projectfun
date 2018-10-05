@@ -13,7 +13,7 @@ function drawMobile() {
     console.log('Paper removed');
     var newDisplay = $('<div>');
     newDisplay.attr('id', 'display');
-    newDisplay.addClass('col-12 text-center')
+    newDisplay.addClass('col-12')
     var navTabs = $('<div>');
     var navTabsList = $('<ul class="nav nav-tabs" id="myTab" role="tablist">');
     var navTabsContent = $('<div class="tab-content" id="myTabContent">');
@@ -278,7 +278,7 @@ $(document).on('click', '.saveModalButton', function() {
         if (source !== "") {
             userRuleset.setImage(currentItemIndex, source); // Sets image source in Ruleset
         }
-        $('#item-' + currentItemIndex).html('<div class="d-flex flex-row align-items-center text-center"><img src="' + userRuleset.getImage(currentItemIndex) + '" class="img-thumbnail m-1 width-override">' + '<p class=" card-text flex-fill float-left p-2">' + nodeName + '</p></div>');
+        $('#item-' + currentItemIndex).html('<div class="d-flex flex-row align-items-center"><img src="' + userRuleset.getImage(currentItemIndex) + '" class="img-thumbnail m-1 width-override">' + '<p class=" card-text flex-fill float-left p-2">' + nodeName + '</p></div>');
     }
     else {
         currentItem.model.attr('label/text', nodeName); //and this line changes the display name 
