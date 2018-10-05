@@ -72,6 +72,43 @@ firebase.auth().onAuthStateChanged(function(user) {
         signOutLI.addClass("nav-item");
         signOutLI.append(signOutLnk); //attach the nav link to the li...
         $(".signin-menu").append(signOutLI) //and the li to the menu
+        //add a publish button (for signed in users only)
+        var publishBtn = $('<button class="my-3 btn btn-secondary publish-btn">');
+        publishBtn.text("Publish My Game");
+        publishBtn.on("click", function(){
+            console.log("Attempting to publish...");
+            //first, validate that the game we've created has all the necessary items
+             if(!userRuleset.isValid()) {
+                console.log("Error - not a valid ruleset!");
+                return;
+            } 
+            //if it's a valid ruleset, assemble what we need and push it to the cloud
+            console.log("Valid game!  We can publish");
+            //now, check if we have a game ID already..if not, let's create a new item!
+            if(!currentGameID) {
+                console.log(userID);
+                var keyRef = database.ref("/publicgames/"+userID).push({
+                    creator: userID
+                }); 
+                currentGameID=keyRef.key; //we now have a reference to our current game!!
+            }
+            //now we update all the game info
+            database.ref("/publicgames/"+userID+"/"+currentGameID).update({title: userRuleset.title});
+            
+            //now we update the node info under /nodes...
+            for(let x=0; x<userRuleset.totalNodes(); x++) {
+                database.ref("/publicgames/"+userID+"/"+currentGameID+"/nodes/"+x).update({
+                    image: userRuleset.getImage(x),
+                    name: userRuleset.getName(x)
+                });            
+            }
+
+            //and the edge info under /edges...
+            for(let y=0; y<userRuleset.totalEdges(); y++) {
+                database.ref("/publicgames/"+userID+"/"+currentGameID+"/edges/"+y).set(userRuleset.edges[y]);
+            }
+        });
+        $(".game-controls").append(publishBtn);
         //finally, close the signin modal
         $("#signInUpModal .close").click() 
     }
@@ -91,39 +128,10 @@ firebase.auth().onAuthStateChanged(function(user) {
         signInLI.addClass("nav-item");
         signInLI.append(signInLnk); //attach the nav link to the li...
         $(".signin-menu").append(signInLI) //and the li to the menu
+        //remove the publish button (if we have one)
+        $('.publish-btn').remove();
         //finally, close the signin modal
         $("#signInUpModal .close").click() 
     }
 });
 
-$("#test").on('click', function(){
-    var user = firebase.auth().currentUser; 
-    if(user)
-    {
-        console.log("Still logged in!" + user.uid);
-        //push a new game object to the database 
-        userID = user.uid;
-/*         var latestPush = database.ref("games/"+userID).push(
-            {
-                title: "Rock Paper Scissors",
-                nodes: {
-                    0: { name: "scissors", 
-                    image: "scissors.jpg" },
-                    1: { name: "paper", 
-                        image: "paper.jpg" },
-                    2: { name: "rock", 
-                       image: "rock.jpg" }
-                },
-                edges: {
-                    0: 1
-                }
-            }
-        ); 
-        console.log(latestPush.key);  */ 
-        currentGameID = "-LNnTvAUjMsP715lSJk1";
-    }  
-    else {
-        console.log("Not yet logged in");
-    }
-    
-});
