@@ -183,6 +183,7 @@ this.totalEdges = function() {
 //isValid() 
 //validates if the current ruleset is a complete game or not
 //returns true if the ruleset is complete, returns false if the ruleset is not complete
+//10.2.18 UPDATE -- per group discussion, games will now FAIL to be valid if the user didn't pick both an image and a name for each node!
     this.isValid = function() {
         //check if we have the right # of nodes -- must be between the min & max # of nodes, and an odd #
         if(this.allNodes.length<this.minNodes || !this.allNodes.length>this.maxNodes || this.allNodes.length%2===0) {
@@ -199,7 +200,11 @@ this.totalEdges = function() {
         //now make sure that all nodes at least have a name (no blanks)...
         for(let i=0; i<this.allNodes.length; i++) {
             if(this.allNodes[i].name==="") {
-                console.log("Not a valid game - still includes blank nodes!");
+                console.log("Not a valid game - not all nodes have names!");
+                return false;
+            }
+            if(this.allNodes[i].image==="") {
+                console.log("Not a valid game - not all nodes have images!");
                 return false;
             }
         }
@@ -253,7 +258,11 @@ this.compile = function(){
     if(!this.isValid()) {
         return false;
     }
-    //(TO-DO): double check we have the right number of edges
+    //next, clear out any associations these nodes already have (so that we can recompile if that ever comes up)
+    this.allNodes.forEach(function(currentNode, index){
+        currentNode.adjacent = [];
+    });
+
     for(let i =0; i<this.edges.length; i++) {
         var currentStep = i+1; //use the humanreadable 'step' convention (indexed from 1)
         currentStep*=this.edges[i]; //apply the directionality to the step, using what's stored in the 'edge' array
@@ -284,25 +293,30 @@ this.compile = function(){
     };
 
 // DELETE METHODS
-// (TO-DO) delete a node from the allnodes array AND any associations that individuals have to it
+// deleteNode(nodeIndex) 
+// removes a node from the allNodes array (and if necessary) the related directionality stored in the edges array
+// ASSUMES the index is a sanitized integer 
+// returns TRUE if it succeeded, FALSE if it failed 
+    this.deleteNode = function(nodeIndex) {
+        const currentNumberOfNodes = this.allNodes.length; //NOTE: using constants for length avoids accidentally changing array length (which will automatically delete stuff)
+        //if this node exists in our current list, and it wouldn't make our game invalid by removing too many nodes - then we can delete!
+        //so we check if the index is less than our current number of nodes, and we also make sure that deleting a node wouldn't put us under the minimum
+        if((nodeIndex < currentNumberOfNodes)&&(currentNumberOfNodes-1>=this.minNodes)) { 
+            this.allNodes.splice(nodeIndex, 1); //splice this node out of the allNodes array completely!
+            //next, delete an edge if necessary
+            //NOTE: this will happen when we have go from an odd # of nodes to an even # - we can't have a complete edge with an even # of nodes
+            const newNumberOfNodes = this.allNodes.length;
+            if(newNumberOfNodes%2===0) {
+                this.edges.pop(); //remove the last edge that we have
+            }
+            return true;
+        }
+        return false;
+    };  
 };
 
-
-//example of adding a game and then creating the associations
-//here's how easy it is to create 'rock-paper-scissors-lizard-spock'!
-/* console.log("======BIG BANG THEORY EXAMPLE========");
-var bigBangTheoryGame = new Ruleset();
-bigBangTheoryGame.addNode("spock", "spock.jpg");
-bigBangTheoryGame.addNode("scissors", "scissors.jpg");
-bigBangTheoryGame.addNode("paper", "paper.jpg");
-bigBangTheoryGame.addNode("rock", "rock.jpg");
-bigBangTheoryGame.addNode("lizard", "lizard.jpg");
-bigBangTheoryGame.toggleEdge(2); //we have to reverse the direction for the 'two-away' steps
-bigBangTheoryGame.compile(); //now we compile the game
-bigBangTheoryGame.consoleLogAll(); //and we can see that it's ready to play!
-
 //Example of starting a totally blank game and then just updating the node names/images as we define them!
-console.log("======TRADITIONAL ROCK PAPER SCISSORS EXAMPLE========");
+/* console.log("======TRADITIONAL ROCK PAPER SCISSORS EXAMPLE========");
 var vanillaRPS = new Ruleset();
 vanillaRPS.addNode();
 vanillaRPS.addNode();
@@ -314,4 +328,29 @@ vanillaRPS.setImage(0, "paper.jpg");
 vanillaRPS.setImage(1, "rock.jpg");
 vanillaRPS.setImage(2, "scissors.jpg");
 vanillaRPS.compile();
-vanillaRPS.consoleLogAll(); */
+vanillaRPS.consoleLogAll();  */
+
+
+/* //example of adding a game and then deleting nodes within it!
+//here's how easy it is to create 'rock-paper-scissors-lizard-spock'!
+ console.log("======BIG BANG THEORY EXAMPLE========");
+var bigBangTheoryGame = new Ruleset();
+bigBangTheoryGame.addNode("spock", "spock.jpg");
+bigBangTheoryGame.addNode("scissors", "scissors.jpg");
+bigBangTheoryGame.addNode("paper", "paper.jpg");
+bigBangTheoryGame.addNode("rock", "rock.jpg");
+bigBangTheoryGame.addNode("lizard", "lizard.jpg");
+bigBangTheoryGame.toggleEdge(2); //we have to reverse the direction for the 'two-away' steps
+bigBangTheoryGame.compile();
+bigBangTheoryGame.consoleLogAll(); //and we can see that we have a fully fledged 5-node game!
+//what if we wanted to delete items?  Let's see...
+console.log("======DELETE ONE NODE========");  
+bigBangTheoryGame.deleteNode(0); //delete the first node...taking us down to just four
+bigBangTheoryGame.compile(); //NOTE: this compile operation will now fail, since four items is not a valid game
+console.log("======DELETE TWO NODES========");
+bigBangTheoryGame.deleteNode(3); //okay, let's delete one more item then
+bigBangTheoryGame.compile(); //this time the game WILL compile, because three nodes is a valid game!
+bigBangTheoryGame.consoleLogAll();
+ */
+
+
