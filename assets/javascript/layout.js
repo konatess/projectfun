@@ -1,47 +1,125 @@
 //CREATE AND DISTRIBUTE ITEMS
-
-// function to redraw items for each change on screens larger than mobile
-function drawWeb() {
-// first, clear out any graph that may already exist
-    graph.clear();
-    createNodes();  // now create the graphical nodes
-    distributeNodesInCircle(); //distribute them in a circular pattern
-    linkNodes();  //and draw the arrows!
-}
-
-// function to redraw items for each change on mobile size screens
-function drawMobile() {
-    $('#display').remove();
-    console.log('Paper removed');
-    var newDisplay = $('<div>');
-    newDisplay.attr('id', 'display');
-    newDisplay.addClass('col-12 text-center')
+function drawTabs() {
+    //(TO-DO): make the tabs themselves dynamic
     var tabCount = userRuleset.totalEdges();
     console.log(tabCount)
-    for (var i = 0; i < 8; i++) {
+
+    for (var i = 1; i < 8; i++) {
         // add the tabs back in
         $('#step-' + i + '-tab').show();
         $('#step-' + i).show();
         $('#step-' + i + '-tab').removeClass('active');
-        $('#step-' + i).removeClass('show active');
-        // remove the All tab, should only show for web
-        if (i === 0){
-            $('#step-' + i + '-tab').hide();
-            $('#step-' + i).hide();
-        }
+        $('#step-' + i).removeClass('show active'); 
+
         // remove tabs higher than the total edges of this ruleset
-        else if (i > tabCount) {
+        if (i > tabCount) {
             $('#step-' + i + '-tab').hide();
             $('#step-' + i).hide();
         }
     }
-    $('#step-1-tab').addClass('active');
-    $('#step-1').addClass('show active');
-    $('.whole-body').append(newDisplay)
-    createMobileNodes();
+    // additionally, remove the All tab if we're on mobile, and highlight the current active tab
+    if (screenSmall){
+            $('.all-steps-tab').hide();
+            if(currentTab===0) {
+                $("#step-1-tab").addClass("active");
+            }
+            else {
+                $("#step-"+currentTab+"-tab").addClass("active");
+            }
+    }
+    else {
+        $('.all-steps-tab').show();
+        $("#step-"+currentTab+"-tab").addClass("active");
+    }
 }
-function createNodes() {
 
+// function to redraw items for each change on screens larger than mobile
+function drawWeb() {
+    // first, clear out any graph that may already exist
+    graph.clear();
+    //figure out the current size we should set the paper (and make it that size)
+    paper.setDimensions($(".game-container").width(), 600);
+    createNodes();  // now create the graphical nodes
+    distributeNodesInCircle(); //distribute them in a circular pattern
+    if(currentTab===0) {
+        linkAllNodes();  //and draw the arrows!
+    }
+    else {
+        drawStepWeb(currentTab);
+    }
+    drawTabs();
+    //lastly, hide any mobile display
+    $('#mobileDisplay').hide();
+    $("#display").show();
+}
+
+// function to redraw items for each change on mobile size screens
+function drawMobile() {
+    //first, hide any unnecessary tabs
+    drawTabs();
+    console.log("Drawing mobile at " + currentTab);
+    if(currentTab===0) {
+        drawStepMobile(1);
+    }
+    else {
+        drawStepMobile(currentTab);
+    }
+    //hide the web display...
+    $('#display').hide();
+    //and show the mobile one
+    $("#mobileDisplay").show();
+
+}
+
+//MOBILE DISPLAY FUNCTIONS
+//display mobile divs in a vertical line, one 'step' at a time
+function drawStepMobile(stepNumber) {
+    console.log("Distributing in line");
+    //Empty the appropriate tab...
+    $('#mobileDisplay').show();
+    $('#mobileDisplay').empty();
+    console.log(stepNumber);
+   // var stepNumber = (i + 1) * userRuleset.edges[i]; //the edges array holds directionality as 1 (clockwise) and -1 (counterclockwise)
+    const totalNodes = userRuleset.totalNodes(); //total number of items we have -- aka the total # of items we have
+    var iterations = 0;
+    var index = 0;
+    //we will hop around WHILE we are not out of things
+    while(iterations<totalNodes) {
+        //figure out where our target is 
+        var targetIndex = index + stepNumber;
+        //make sure that target index doesn't exceed the bounds of our array!
+        if (targetIndex < 0) {  //if we have gone below the START of the array, adjust our goals
+            targetIndex = totalNodes + targetIndex;
+        }
+        else if (targetIndex >= totalNodes) { //OR if we have gone past the END of the array
+            //figure out how much we overshot by:
+            targetIndex = targetIndex - totalNodes;
+        }
+ 
+         //Now we actually add the thing on :)
+         var itemName = userRuleset.getName(index);
+         if (!itemName) {
+             itemName = 'click to add name or image'
+         }
+         var itemImage = userRuleset.getImage(index);
+         var newItem = $('<div class="card bg-mobileNodes my-1">'); // Add new node container
+         newItem.attr('id', 'item-' + index)
+         newItem.attr('data-index', index);
+         var newItemContent = $('<div class="d-flex flex-row align-items-center"><img src="' + itemImage + '" class="img-thumbnail m-1 width-override">' + '<p class="card-text text-left flex-fill p-2">' + itemName + '</p></div>')
+         newItem.append(newItemContent);
+         $('#mobileDisplay').append(newItem);
+         if (iterations < (userRuleset.totalNodes() - 1)) {
+             $('#mobileDisplay').append('defeats');
+         }
+        //now our current thing will be the next place we leap from!
+        index = targetIndex;
+        iterations++;
+    }
+    
+}
+
+//WEB VIEW FUNCTIONS
+function createNodes() {
     items = [];
     //NOTE: when we generate these guys, we need to give them an onclick so they will open an editing modal 
     //and the user can then put in the name and pick an image
@@ -71,31 +149,6 @@ function createNodes() {
     }
 }
 
-function createMobileNodes() {
-    items = [];
-    console.log('createMobileNodes called')
-    $('#step-1').empty();
-    for (var i = 0; i < userRuleset.totalNodes(); i++) { 
-        var itemName = userRuleset.getName(i);
-        if (!itemName) {
-            itemName = 'click to add name or image'
-        }
-        var itemImage = userRuleset.getImage(i);
-        var newItem = $('<div class="card bg-mobileNodes my-1">'); // Add new node container
-        newItem.attr('id', 'item-' + i)
-        newItem.attr('data-index', i);
-        var newItemContent = $('<div class="d-flex flex-row align-items-center"><img src="' + itemImage + '" class="img-thumbnail m-1 width-override">' + '<p class="card-text text-left flex-fill p-2">' + itemName + '</p></div>')
-        newItem.append(newItemContent);
-
-        items.push(newItem); //hold an array of these new items 
-        $('#step-1').append(newItem)
-        if (i < (userRuleset.totalNodes() - 1)) {
-            $('#step-1').append('defeats');
-        }
-    }
-
-}
-
 //distributeNodesInCircle()
 //function distributes all existing items into a circle pattern
 //NOTE: this function is intended for all desktop screens; for mobile we'll need to have a different distribution pattern
@@ -107,7 +160,7 @@ function distributeNodesInCircle() {
     angle = 4.72, step = (2 * Math.PI) / userRuleset.totalNodes();
 
     items.forEach(function (currentItem, index) {
-        var x = Math.round(width / 2 + radius * Math.cos(angle)) + 100;
+        var x = Math.round(width / 2 + radius * Math.cos(angle)) - 50;
         var y = Math.round(height / 2 + radius * Math.sin(angle)) - 50;  //note: we are giving a bit of an offset here because we want this to look centered
         currentItem.translate(x, y); //move the existing item to the place we want it to go
         currentItem.addTo(graph); //add it to our graph
@@ -115,10 +168,23 @@ function distributeNodesInCircle() {
     });
 }
 
-function distributeNodesInLine() {
-    var stepNumber = (i + 1) * userRuleset.edges[i]; //the edges array holds directionality as 1 (clockwise) and -1 (counterclockwise)
+//linkAllNodes() 
+//this is a function that will link all nodes based on the number of steps currently stored in the ruleset (and the directionality of them)
+//it will draw arrows based on the current directions stored in the 'edges' array in the Ruleset object
+//note: a collection of 'edges' is being referred to as a 'step' -- ie, how many nodes away we are looking 
+//in traditional rock-scissors-paper, each item defeats the item immediately adjacent to it ('one away'). We are calling that "step 1".
+function linkAllNodes() {
+    //for as many 'steps' as we have, we are going to link items!
+    for (let i = 0; i < userRuleset.totalEdges(); i++) {
+        var stepNumber = (i + 1) * userRuleset.edges[i]; //the edges array holds directionality as 1 (clockwise) and -1 (counterclockwise)
+        drawStepWeb(stepNumber);
+    }
+}
+
+//drawLink
+function drawStepWeb(stepNumber) {
     const totalNodes = userRuleset.totalNodes(); //total number of items we have -- aka the total # of items we have
-    items.forEach(function (index) {
+    items.forEach(function (currentItem, index) {
         //figure out where our target is 
         var targetIndex = index + stepNumber;
         //make sure that target index doesn't exceed the bounds of our array!
@@ -129,54 +195,30 @@ function distributeNodesInLine() {
             //figure out how much we overshot by:
             targetIndex = targetIndex - totalNodes;
         }
+        //now that we have this set, draw the correct arrow!
+        var link = new joint.shapes.standard.Link();
+        link.source(currentItem);
+        link.target(items[targetIndex]);
+        // adjust width of arrow stems can change color with line/stroke, color
+        link.attr('line/strokeWidth', 2);
+        // adjust size of arrow heads, can also add fill: color
+        link.attr('line/targetMarker', {'d': 'M 20 -6 0 0 20 6 Z'})
+        link.addTo(graph);
     });
 }
 
-
-//linkNodes() 
-//this is a function that will link all nodes based on the number of steps currently stored in the ruleset (and the directionality of them)
-//it will draw arrows based on the current directions stored in the 'edges' array in the Ruleset object
-//note: a collection of 'edges' is being referred to as a 'step' -- ie, how many nodes away we are looking 
-//in traditional rock-scissors-paper, each item defeats the item immediately adjacent to it ('one away'). We are calling that "step 1".
-function linkNodes() {
-    //for as many 'steps' as we have, we are going to link items!
-    for (let i = 0; i < userRuleset.totalEdges(); i++) {
-        var stepNumber = (i + 1) * userRuleset.edges[i]; //the edges array holds directionality as 1 (clockwise) and -1 (counterclockwise)
-        const totalNodes = userRuleset.totalNodes(); //total number of items we have -- aka the total # of items we have
-        items.forEach(function (currentItem, index) {
-            //figure out where our target is 
-            var targetIndex = index + stepNumber;
-            //make sure that target index doesn't exceed the bounds of our array!
-            if (targetIndex < 0) {  //if we have gone below the START of the array, adjust our goals
-                targetIndex = totalNodes + targetIndex;
-            }
-            else if (targetIndex >= totalNodes) { //OR if we have gone past the END of the array
-                //figure out how much we overshot by:
-                targetIndex = targetIndex - totalNodes;
-            }
-            //now that we have this set, draw the correct arrow!
-            var link = new joint.shapes.standard.Link();
-            link.source(currentItem);
-            link.target(items[targetIndex]);
-            // adjust width of arrow stems can change color with line/stroke, color
-            link.attr('line/strokeWidth', 2);
-            // adjust size of arrow heads, can also add fill: color
-            link.attr('line/targetMarker', {'d': 'M 20 -6 0 0 20 6 Z'})
-            // POSSIBLE FUTURE FEATURE
-            // puts a label in the middle of each path. 
-            // can use this to add custom words
-            // however, it only looks good on fewer relationsips
-            // and rotating the label to the same angle as the path is more complicated
-            // maybe we can try using it only on the single step displays
-            // link.appendLabel({
-            //     attrs: {
-            //         text: {
-            //             text: 'defeats'
-            //         }
-            //     }
-            // });
-            link.addTo(graph);
-        });
+//MOBILE RESPONSIVENESS
+//Dynamically determine which display to render -- small screen version or web version
+function determineDisplay() {
+    var theWindowSize = $(this).width();
+    if(theWindowSize < 833)
+    { //if the window size is less than 833px, we should render a more straightforward view 
+        screenSmall = true;
+        drawMobile();
+    }
+    else { //otherwise, the display is large enough to support the full graphical view!
+        screenSmall = false;
+        drawWeb();
     }
 }
 
@@ -187,9 +229,10 @@ $.ready()
 var items = []; //array that stores the graph elements to display on our paper
 var currentItemIndex;
 var currentItem;
-var source;
+var source; 
 var nodeName;
-var screenSmall = window.matchMedia("(max-width: 640px)")
+var screenSmall; //boolean that determines if we're rendering the mobile or web version
+var currentTab=0; //integer of the current tab we have selected
 
 //GRAPH AREA -- this is where we draw our nodes
 var userRuleset = new Ruleset();
@@ -197,20 +240,18 @@ var graph = new joint.dia.Graph;
 var paper = new joint.dia.Paper({
     el: document.getElementById('display'),
     model: graph,
-    width: 350,
+    width: $(".game-container").width(),
     height: 600,
     interactive: { elementMove: false, arrowheadMove: false }, //makes the items not draggable, arrows not draggable
     gridSize: 1
 });
 ;
 
-
 //VISUALIZATION: ON-CLICK EVENT FOR INDIVIDUAL ITEMS
 // WEB VERSION
 paper.on('element:pointerclick', function (element) {
     currentItem = element
     currentItemIndex = element.model.attr('dataindex/text'); //To access the current item's INDEX, we have to use the attribute 'dataindex/text'
-    console.log("We have clicked the node " + currentItemIndex);
     //Show the modal 
     source = "";
     nodeName = "";
@@ -224,7 +265,6 @@ paper.on('element:pointerclick', function (element) {
 // MOBILE VERSION
 $(document).on('click', '.card', function() {
     currentItemIndex = $(this).attr('data-index'); //To access the current item's INDEX, we have to use the attribute 'dataindex/text'
-    console.log("We have clicked the node " + currentItemIndex);
     //Show the modal 
     source = "";
     nodeName = "";
@@ -266,16 +306,18 @@ $(".submit").click(function (e) {
         }
     });
 });
+
 $(document).on('click', '.modalPic', function() {
     $('.modalPic').removeClass('selected-image');
     $(this).addClass('selected-image');
     source = $(this).attr('src')
     console.log('Picture source: ' + source)
 })
+
 $(document).on('click', '.saveModalButton', function() {
     nodeName = $('#nodeNameDisplay').val().trim();
     userRuleset.setName(currentItemIndex, nodeName); //this line would set the name in the internal datamodel...
-    if (screenSmall.matches) {
+    if (screenSmall) {
         if (source !== "") {
             userRuleset.setImage(currentItemIndex, source); // Sets image source in Ruleset
         }
@@ -290,6 +332,41 @@ $(document).on('click', '.saveModalButton', function() {
     }
 })
 
+
+
+//LISTENER FOR STEP TABS
+$(".step-tab").on("click", function(){
+    const selectedStep = parseInt($(this).attr("data-index")); //grab which step we're looking at
+    //remove the 'active' from the previous tab...
+    $("#step-" + currentTab + "-tab").removeClass("active");
+    currentTab = selectedStep;
+    $(this).addClass("active"); //add it to the current tab...
+    //and update which tab has it
+    //NOTE: there is probably a better way to do this!
+    if(screenSmall) {
+        //do this when on mobile...
+        //NOTE: for small screens, '1' is actually the all-nodes option!
+        if(selectedStep===1) {
+            currentTab = 0;
+        }
+        drawStepMobile(selectedStep);
+    }
+    else {
+       //otherwise, draw the graph correctly for web!
+       //NOTE: need to find a more elegant way to do this -should be able to just delete the links 
+       graph.clear();
+       paper.setDimensions($(".game-container").width(), 600);
+       createNodes();  // now create the graphical nodes
+       distributeNodesInCircle(); //distribute them in a circular pattern
+       drawStepWeb(selectedStep); //but ONLY draw the links for this one step!
+    }
+});
+
+//LISTENER FOR ALL-STEPS TAB (WEB ONLY)
+$(".all-steps-tab").on("click", function(){
+    determineDisplay();
+});
+
 //PARSLEY VALIDATOR FOR ODD NUMBERS
 //Allows us to ensure that the user is not passing an even # 
 window.Parsley
@@ -303,6 +380,17 @@ window.Parsley
     }
   });
 
+
+//LISTENER: Window resize
+//When resizing the window, be sure to check if we need to change the display
+$(window).resize(function()
+{   
+    //TO-DO: check what step we are on (if applicable)
+    determineDisplay();
+});
+
+
+
 //GENERATE NODES BASED ON HOW MANY WE ASKED FOR
 //Listener for our item slider
 //Each time the item slider changes value, this function will reset the graph & redraw it
@@ -310,6 +398,9 @@ window.Parsley
 //My proposal is that instead of erasing the ruleset (like below), we merely change the cap on its length 
 //That will require some tweaks to the graph class / the link nodes function
 $('#item-slider').on('input', function () {
+    //reset our current tab to all so that we see the right level
+    currentTab = 0;
+
     //first, grab the current value of the slider 
     const newNumberOfNodes = parseInt($(this).val()); 
 
@@ -325,12 +416,7 @@ $('#item-slider').on('input', function () {
         //We should then immediately update what the user sees!
         $("#number-of-items").text(newNumberOfNodes); //change the number on the slider label
         //NOTE: We should do something different if it's on mobile vs web!
-        if (screenSmall.matches) {
-            drawMobile();
-        }
-        else {
-            drawWeb();
-        }
+        determineDisplay();
     }
     //otherwise, if we are DELETING nodes...we need to pause for the user to tell us 'yes' or 'no' ;)
     else if(netChange<0) { 
@@ -371,12 +457,7 @@ $('#item-slider').on('input', function () {
                     userRuleset.deleteNode(k);
                 }
                 $("#number-of-items").text(newNumberOfNodes); //change the number on the slider label
-                if (screenSmall.matches) {
-                    drawMobile();
-                }
-                else {
-                    drawWeb();
-                }
+                determineDisplay();
                 //and hide the modal
                 $("#genericModal").modal("hide");
             });
@@ -393,29 +474,25 @@ $('#item-slider').on('input', function () {
                 userRuleset.deleteNode(m);
             }
             $("#number-of-items").text(newNumberOfNodes); //change the number on the slider label
-            if (screenSmall.matches) {
-                drawMobile();
-            }
-            else {
-                drawWeb();
-            }
-            
+            determineDisplay();
         }
     }   
 });
 
 //WHEN THE PAGE LOADS, SHOW A DEFAULT EXAMPLE RULESET 
 //Note: eventually this will only show if you are not logged in / do not have a saved game
-    userRuleset.addNode("Click me to get started!");
+  /*   userRuleset.addNode("Click me to get started!");
     userRuleset.addNode("");
-    userRuleset.addNode("");
-    if (screenSmall.matches) {
-        drawMobile();
-    }
-    else {
-        drawWeb();
-    }
+    userRuleset.addNode(""); */
+
+    userRuleset.addNode("Rock");
+    userRuleset.addNode("Spock");
+    userRuleset.addNode("Scissors");
+    userRuleset.addNode("Lizard");
+    userRuleset.addNode("Paper");
+
+    //determine what display size to show
+    determineDisplay();
 }
 
-// myFunction(screenSmall) // Call listener function at run time
-// screenSmall.addListener(myFunction) // Attach listener function on state changes
+
