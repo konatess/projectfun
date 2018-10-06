@@ -8,7 +8,7 @@ function drawTabs() {
         // add the tabs back in
         $('#step-' + i + '-tab').show();
         $('#step-' + i).show();
-        $('#step-' + i + '-tab').removeClass('active');
+        $('#step-' + i + '-tab').removeClass('active'); //clear out the 'active' from all tabs
         $('#step-' + i).removeClass('show active'); 
 
         // remove tabs higher than the total edges of this ruleset
@@ -20,7 +20,7 @@ function drawTabs() {
     // additionally, remove the All tab if we're on mobile, and highlight the current active tab
     if (screenSmall){
             $('.all-steps-tab').hide();
-            if(currentTab===0) {
+            if(currentTab===0) { //if the screen is small and we're on the 'all' tab -- we are hiding the 'all' tab, so make the '1' tab actually show as active
                 $("#step-1-tab").addClass("active");
             }
             else {
@@ -41,11 +41,12 @@ function drawWeb() {
     paper.setDimensions($(".game-container").width(), 600);
     createNodes();  // now create the graphical nodes
     distributeNodesInCircle(); //distribute them in a circular pattern
+    //and draw the nodes!
     if(currentTab===0) {
-        linkAllNodes();  //and draw the arrows!
+        linkAllNodes();  //note: the 0 tab = the 'all' tab, so we'd link all the nodes
     }
     else {
-        drawStepWeb(currentTab);
+        drawStepWeb(currentTab); //otherwise, we simply draw links for the step we are on
     }
     drawTabs();
     //lastly, hide any mobile display
@@ -209,7 +210,7 @@ function drawStepWeb(stepNumber) {
 
 //MOBILE RESPONSIVENESS
 //Dynamically determine which display to render -- small screen version or web version
-function determineDisplay() {
+function drawDisplay() {
     var theWindowSize = $(this).width();
     if(theWindowSize < 833)
     { //if the window size is less than 833px, we should render a more straightforward view 
@@ -337,7 +338,7 @@ $(document).on('click', '.saveModalButton', function() {
 //LISTENER FOR STEP TABS
 $(".all-steps-tab").on("click", function(){
     currentTab = 0;
-    determineDisplay(); //display everything if we were on the 'all' tab
+    drawDisplay(); //display everything if we were on the 'all' tab
 });
 
 $(".step-tab").on("click", function(){
@@ -369,7 +370,7 @@ $(".step-tab").on("click", function(){
 
 //LISTENER FOR ALL-STEPS TAB (WEB ONLY)
 $(".all-steps-tab").on("click", function(){
-    determineDisplay();
+    drawDisplay();
 });
 
 //PARSLEY VALIDATOR FOR ODD NUMBERS
@@ -387,13 +388,11 @@ window.Parsley
 
 
 //LISTENER: Window resize
-//When resizing the window, be sure to check if we need to change the display
+//When resizing the window, redraw the display so that we get the correct one
 $(window).resize(function()
 {   
-    //TO-DO: check what step we are on (if applicable)
-    determineDisplay();
+    drawDisplay();
 });
-
 
 
 //GENERATE NODES BASED ON HOW MANY WE ASKED FOR
@@ -403,7 +402,7 @@ $(window).resize(function()
 //My proposal is that instead of erasing the ruleset (like below), we merely change the cap on its length 
 //That will require some tweaks to the graph class / the link nodes function
 $('#item-slider').on('input', function () {
-    //reset our current tab to all so that we see the right level
+    //reset our current tab to 'all' so that we see the right level
     currentTab = 0;
 
     //first, grab the current value of the slider 
@@ -421,7 +420,7 @@ $('#item-slider').on('input', function () {
         //We should then immediately update what the user sees!
         $("#number-of-items").text(newNumberOfNodes); //change the number on the slider label
         //NOTE: We should do something different if it's on mobile vs web!
-        determineDisplay();
+        drawDisplay();
     }
     //otherwise, if we are DELETING nodes...we need to pause for the user to tell us 'yes' or 'no' ;)
     else if(netChange<0) { 
@@ -462,7 +461,7 @@ $('#item-slider').on('input', function () {
                     userRuleset.deleteNode(k);
                 }
                 $("#number-of-items").text(newNumberOfNodes); //change the number on the slider label
-                determineDisplay();
+                drawDisplay();
                 //and hide the modal
                 $("#genericModal").modal("hide");
             });
@@ -479,25 +478,17 @@ $('#item-slider').on('input', function () {
                 userRuleset.deleteNode(m);
             }
             $("#number-of-items").text(newNumberOfNodes); //change the number on the slider label
-            determineDisplay();
+            drawDisplay();
         }
     }   
 });
 
 //WHEN THE PAGE LOADS, SHOW A DEFAULT EXAMPLE RULESET 
 //Note: eventually this will only show if you are not logged in / do not have a saved game
-   userRuleset.addNode("Click me to get started!");
+    userRuleset.addNode("Click me to get started!");
     userRuleset.addNode("");
     userRuleset.addNode(""); 
-
- /*    userRuleset.addNode("Rock");
-    userRuleset.addNode("Spock");
-    userRuleset.addNode("Scissors");
-    userRuleset.addNode("Lizard");
-    userRuleset.addNode("Paper"); */
-
-    //determine what display size to show
-    determineDisplay();
+    drawDisplay();
 }
 
 
