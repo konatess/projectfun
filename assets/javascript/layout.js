@@ -13,10 +13,31 @@ function drawMobile() {
     console.log('Paper removed');
     var newDisplay = $('<div>');
     newDisplay.attr('id', 'display');
-    newDisplay.addClass('col-12')
+    newDisplay.addClass('col-12 text-center')
+    var tabCount = userRuleset.totalEdges();
+    console.log(tabCount)
     var navTabs = $('<div>');
     var navTabsList = $('<ul class="nav nav-tabs" id="myTab" role="tablist">');
     var navTabsContent = $('<div class="tab-content" id="myTabContent">');
+    for (var i = 0; i < tabCount; i++) {
+        var newTab = $('<li class="nav-item"><a class="nav-link" id="tab-' + i+1 + '" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">' + i + 1 + '</a></li>');
+    //     if(i = 0) {
+    //         newTab.addClass(active);
+    //     }
+    //     navTabsList.append(newTab)
+        // var newContent = $('<div class="tab-pane fade" id="tab-content-' + i+1 + '" role="tabpanel" aria-labelledby="step-' + i+1 + '"></div>');
+    //     if (i = 0) {
+    //         newContent.addClass('show active');
+    //     }
+    //     navTabsContent.append(newContent);
+    }
+    // navTabs.append(navTabsList, navTabsContent);
+    // newDisplay.append(navTabs);
+
+    // <nav class="navbar navbar-light bg-light">
+    //     <span class="navbar-brand mb-0 h1">Navbar</span>
+    // </nav>
+
 //     <ul class="nav nav-tabs" id="myTab" role="tablist">
 //   <li class="nav-item">
 //     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
@@ -66,26 +87,17 @@ function createNodes() {
 function createMobileNodes() {
     items = [];
     console.log('createMobileNodes called')
-    for (var i = 0; i < userRuleset.totalNodes(); i++) { //NOTE: we may want a better way to reference the nodes
+    for (var i = 0; i < userRuleset.totalNodes(); i++) { 
         var itemName = userRuleset.getName(i);
         if (!itemName) {
             itemName = 'click to add name or image'
         }
         var itemImage = userRuleset.getImage(i);
-        var newItem = $('<div>'); // Add new node container
-        newItem.addClass('card bg-light my-1');
+        var newItem = $('<div class="card bg-light my-1">'); // Add new node container
         newItem.attr('id', 'item-' + i)
         newItem.attr('data-index', i);
-        var newBody = $('<div>');
-        newBody.text(itemName)
-        newBody.addClass('card-body');
-        var newImage = $('<img src="' + itemImage + '">');
-        newImage.addClass('rounded float-left w-50');
-        var newName = $('<p>')
-        newName.addClass('float-right')
-        newBody.prepend(newImage)
-        newItem.append(newBody);
-        console.log(newItem)
+        var newItemContent = $('<div class="d-flex flex-row align-items-center"><img src="' + itemImage + '" class="img-thumbnail m-1 width-override">' + '<p class="card-text text-left flex-fill p-2">' + itemName + '</p></div>')
+        newItem.append(newItemContent);
 
         items.push(newItem); //hold an array of these new items 
         $('#display').append(newItem)
@@ -278,7 +290,7 @@ $(document).on('click', '.saveModalButton', function() {
         if (source !== "") {
             userRuleset.setImage(currentItemIndex, source); // Sets image source in Ruleset
         }
-        $('#item-' + currentItemIndex).html('<div class="d-flex flex-row align-items-center"><img src="' + userRuleset.getImage(currentItemIndex) + '" class="img-thumbnail m-1 width-override">' + '<p class=" card-text flex-fill float-left p-2">' + nodeName + '</p></div>');
+        $('#item-' + currentItemIndex).html('<div class="d-flex flex-row align-items-center"><img src="' + userRuleset.getImage(currentItemIndex) + '" class="img-thumbnail m-1 width-override">' + '<p class="card-text text-left flex-fill p-2">' + nodeName + '</p></div>');
     }
     else {
         currentItem.model.attr('label/text', nodeName); //and this line changes the display name 
