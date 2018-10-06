@@ -147,7 +147,7 @@
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active py-2" id="signInTab">
-                                <form class="py-2" data-parsley-validate>
+                                <form id="signInForm" class="py-2" data-parsley-validate>
                                     <div class="form-group">
                                         <label for="signInEmail">Email address</label>
                                         <input type="email" class="form-control" id="signInEmail" aria-describedby="emailHelp"
@@ -165,8 +165,8 @@
                             <div role="tabpanel" class="tab-pane py-2" id="newAccountTab">
                                 <p>Create an account to save your game as you create it! You can also invite friends to
                                     play your custom rules.</p>
-                                <form>
-                                    <div class="form-group" data-parsley-validate>
+                                <form id="signUpForm" data-parsley-validate>
+                                    <div class="form-group">
                                         <label for="signUpEmail">Email address</label>
                                         <input type="email" class="form-control" id="signUpEmail" aria-describedby="emailHelp"
                                             data-parsley-type="email" data-parsley-trigger="blur focusout"
