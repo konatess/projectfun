@@ -16,44 +16,20 @@ function drawMobile() {
     newDisplay.addClass('col-12 text-center')
     var tabCount = userRuleset.totalEdges();
     console.log(tabCount)
-    var navTabs = $('<div>');
-    var navTabsList = $('<ul class="nav nav-tabs" id="myTab" role="tablist">');
-    var navTabsContent = $('<div class="tab-content" id="myTabContent">');
-    for (var i = 0; i < tabCount; i++) {
-        var newTab = $('<li class="nav-item"><a class="nav-link" id="tab-' + i+1 + '" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">' + i + 1 + '</a></li>');
-    //     if(i = 0) {
-    //         newTab.addClass(active);
-    //     }
-    //     navTabsList.append(newTab)
-        // var newContent = $('<div class="tab-pane fade" id="tab-content-' + i+1 + '" role="tabpanel" aria-labelledby="step-' + i+1 + '"></div>');
-    //     if (i = 0) {
-    //         newContent.addClass('show active');
-    //     }
-    //     navTabsContent.append(newContent);
+    for (var i = 0; i < 8;) {
+        console.log('i is ' + i)
+        if (i === 0){
+            console.log('inside the if')
+            $('step-' + i + '-tab').parent().hide();
+            $('step-' + i).hide();
+        }
+        else if (i > tabCount) {
+            console.log ('i: ' + i + ' is greater than ' + tabCount)
+        }
+        i++
     }
-    // navTabs.append(navTabsList, navTabsContent);
-    // newDisplay.append(navTabs);
-
-    // <nav class="navbar navbar-light bg-light">
-    //     <span class="navbar-brand mb-0 h1">Navbar</span>
-    // </nav>
-
-//     <ul class="nav nav-tabs" id="myTab" role="tablist">
-//   <li class="nav-item">
-//     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
-//   </li>
-//   <li class="nav-item">
-//     <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
-//   </li>
-//   <li class="nav-item">
-//     <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
-//   </li>
-// </ul>
-// <div class="tab-content" id="myTabContent">
-//   <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">...</div>
-//   <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
-//   <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
-// </div>
+    $('step-1-tab').addClass('active')
+    $('step-1').addClass('show active')
     $('.whole-body').append(newDisplay)
     createMobileNodes();
 }
