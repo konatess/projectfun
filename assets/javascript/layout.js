@@ -19,14 +19,18 @@ function drawMobile() {
     var tabCount = userRuleset.totalEdges();
     console.log(tabCount)
     for (var i = 0; i < 8;) {
-        console.log('i is ' + i)
+        // add the tabs back in
+        $('#step-' + i + '-tab').show();
+        $('#step-' + i).show();
+        // remove the All tab, should only show for web
         if (i === 0){
-            console.log('inside the if')
-            $('step-' + i + '-tab').parent().hide();
-            $('step-' + i).hide();
+            $('#step-' + i + '-tab').hide();
+            $('#step-' + i).hide();
         }
+        // remove tabs higher than the total edges of this ruleset
         else if (i > tabCount) {
-            console.log ('i: ' + i + ' is greater than ' + tabCount)
+            $('#step-' + i + '-tab').hide();
+            $('#step-' + i).hide();
         }
         i++
     }
@@ -69,6 +73,7 @@ function createNodes() {
 function createMobileNodes() {
     items = [];
     console.log('createMobileNodes called')
+    $('#step-1').empty();
     for (var i = 0; i < userRuleset.totalNodes(); i++) { 
         var itemName = userRuleset.getName(i);
         if (!itemName) {
@@ -82,9 +87,9 @@ function createMobileNodes() {
         newItem.append(newItemContent);
 
         items.push(newItem); //hold an array of these new items 
-        $('#display').append(newItem)
+        $('#step-1').append(newItem)
         if (i < (userRuleset.totalNodes() - 1)) {
-            $('#display').append('defeats');
+            $('#step-1').append('defeats');
         }
     }
 
