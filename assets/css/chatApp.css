@@ -1,81 +1,95 @@
-html,
-body {
-    height: 100%;
-    /*     background-image: url("../images/trianglify.svg") */
-    background-color: palegoldenrod;
+html, body { 
+    height: 100%; 
+    background-image: url('../images/title.PNG'); 
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+       /* Set rules to fill background */
+       min-height: 100%;
+       min-width: 1024px;
+         
+       /* Set up proportionate scaling */
+       width: 100%;
+       height: auto;
+         
+       /* Set up positioning */
+       position: fixed;
+       top: 0;
+       left: 0;
+     }
+     
+     @media screen and (max-width: 1024px) { /* Specific to this particular image */
+      body{
+         left: 50%;
+         margin-left: -512px;   /* 50% */
+       }
 }
 
-* {
-    font-family: 'Quicksand', sans-serif;
-    cursor: auto;
+h1, h2, h3, h4, h5, h6 { font-family: 'Eagle Lake', cursive; }
+
+p { 
+    font-size: 1.1em; 
+    font-family: 'Raleway', sans-serif;
+    color: #000;
 }
 
-header,
-footer {
+footer { position: sticky; top: 100%; }
+
+.bg-filter {
+    background: #ffffff66; 
+}
+
+.chat-log { 
+    height: 400px;
+    overflow-y: scroll;
+}
+
+#bottom{
+    margin-top: 50px;
+}
+#top.parts{
+    background-color: aqua;
+    /* height: 400px;
+    margin-top: 50px; */
+}
+
+#one{
+    height: 100px;
+    width: 100px;
+    background:transparent;
+    color: white;
+}
+ #two{
+  height: 100px;
+  width: 100px;
+ margin-top: 5px;
+ background:transparent;
+ /* background-color: blue;  */
+}
+ #three{
+    height: 100px;
+    width: 100px;
+    background:transparent;
+    margin-top:5px;
+
+}
+#four{
+    height: 100px;
+    width: 100px;
+    background-color:fuchsia ;
+    margin-top: 5px;
+
+}
+.card-title{
+    text-align: left;
+    color: white;
+}
+.card-body{
     text-align: center;
-    background-color: #ffffff44;
 }
 
-footer {
-    position: sticky;
-    top: 100%;
-}
-
-#display {
-    width: 650px;
-}
-
-.modalPic {
-    height: 150px;
-    width: auto;
-}
-
-.slider {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 15px;
-    border-radius: 5px;
-    background: #d3d3d3;
-    outline: none;
-    opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
-}
-
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: #4CAF50;
-    cursor: pointer;
-}
-
-.slider::-moz-range-thumb {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: #4CAF50;
-    cursor: pointer;
-}
-
-.selected-image {
-    border: solid 2px #333
-}
-
-image {
-    cursor: pointer;
-}
-
-.width-override {
-    max-width: 30% !important;
-    max-height: 90px !important;
-}
-
-/* By Pushpinder(added css to link and botton for user to go to the chat page */
 #nextPage {
-    margin-left: 90%;
+    margin-left: 85%;
     position: fixed;
     bottom: 3px;
 }
