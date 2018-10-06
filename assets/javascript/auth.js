@@ -7,7 +7,6 @@ $(".login").on("click", function(){
     //first, determine if we are trying to sign in or up...
     //SIGN IN
     //if we have both a sign in and sign up email, we try to do that first
-
     //first, validate that the inputs follow our parsley rules...
     var validatedSignInEmail = $("#signInEmail").parsley();
     var validatedSignInPassword = $("#signInPassword").parsley();
@@ -37,19 +36,40 @@ $(".login").on("click", function(){
     var validatedSignUpPassword = $("#signUpPassword").parsley();
     //TO-DO: VALIDATE
     if(validatedSignUpEmail.isValid() && validatedSignUpPassword.isValid()) { 
+
         var signUpEmail = $("#signUpEmail").val().trim();
         var signUpPassword = $("#signUpPassword").val().trim();
+        $("#signUpError").remove(); //remove any previous error messages...
         console.log(signUpEmail + " " + signUpPassword);
         console.log("Attempting to sign up...");
         firebase.auth().createUserWithEmailAndPassword(signUpEmail, signUpPassword).catch(function(error) {
             console.log(error.code);
             console.log(error.message);
+                  //oh no, something went wrong!  let the user know to try again by showing an error message
+                  var errorDiv = $("<div>");
+                  errorDiv.html("<P>" + error.message + "</p>");
+                  errorDiv.attr("id", "signUpError");
+                  $("#signInTab").append(errorDiv);
         });
     }
-    //OTHERWISE, IF NEITHER OPERATION SUCCEEDED:
-    //(TO DO) show the user an error
-    console.log("You failed");
 });
+
+//SIGN IN/OUT MODAL: ON HIDE
+//When the user clicks away from the sign in/out modal, we should reset it to avoid any passwords or info lingering
+$("#signInUpModal").on("hidden.bs.modal", function(){
+    //remove any previous error messages...
+    $("#signUpError").remove(); 
+    $("#signInError").remove(); 
+    //and reset the form values!
+    $("#signUpEmail").val("");
+    $("#signUpPassword").val("");
+    $("#signInEmail").val("");
+    $("#signInPassword").val("");
+    //reset parsley validations
+    $('#signInForm').parsley().reset();
+    $('#signUpForm').parsley().reset();
+});
+
 
 function signOut() {
     //if a user is currently logged in, we log them out!
@@ -139,6 +159,8 @@ firebase.auth().onAuthStateChanged(function(user) {
         //remove the publish button (if we have one)
         $('.publish-btn').remove();
         //finally, close the signin modal
+        $("#signUpError").remove(); //remove any error messages (if we have them)
+        $("#signInError").remove(); //remove any error messages (if we have them)
         $("#signInUpModal .close").click() 
     }
 });
