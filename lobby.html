@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>RPS Generator</title>
+    <title>Play Rock-Paper-Scissors!</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -25,7 +25,7 @@
         <!-- Placeholder title, we can change it if we want later -->
         <div class="row">
             <header class="col-12 p-1">
-                <h2>Rock Paper Scissors Game Generator</h2>
+                <h2>Play Rock Paper Scissors</h2>
             </header>
         </div>
    
@@ -52,76 +52,23 @@
 
     <div class="container">
         <!-- container for whole body so that we can manipulate borders etc -->
-        <div class="whole-body row mx-1">
+        <div class="row mx-1">
 
-            <!-- area for instructions, play buttons, display for chatting with other players, etc -->
-            <div class="game-controls col-12 col-lg-4 pt-2 pr-5 mb-2">
-                <h3>Game Name</h3>
-                <!-- Slider to create a game with a certain number of items -->
-                <label for="item-slider">Number of Items:<span id="number-of-items">3</span></label>
-                <input type="range" class="slider" name="slider-step" id="item-slider" value="3" min="3" max="15" step="2" />
+            <!-- area for looking at games chatting with other players -->
+            <div class="public-games col-12 pt-2 pr-5 mb-2">
+                <h3>Find a Game</h3>
+                <!-- List of publicly available rules can populate here-->
             </div>
-
-           <!-- area to display the nodes in circle format -->
-            <!-- we can also do the initial set up inputs in this area -->
-            <div id="display" class="col-12 col-lg-8 position-relative">
+        </div>
+        <div class="row">
+            <div class="chat-room col-12">
+                <!--area for chatting (?)-->
             </div>
-
         </div>
     </div>
 </div>
     <!-- footer with copywrite, and we can put other credits and things here later if we need/want -->
     <footer class="p-2">&#169; Theresa, Pushpinder, Tassa, Craig</footer>
-
-    <!-- Modal header -->
-    <div class="modal fade bd-example-modal-lg inputModal" id="inputModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="nodeNameLabel">Search for an image and give it a display name</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <!-- Node's image search and display name text bars -->
-                <div class="modal-body">
-                    <div class="container">
-                        <form>
-                            <div class="input-group w-100">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">Item Name</span>
-                                </div>
-                                <input type="text" class="form-control" id="nodeNameDisplay" placeholder="Display Name">
-                            </div>
-                            <div class="input-group w-100 mt-2">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text px-1" id="basic-addon2">Image Search</span>
-                                </div>
-                                <input type="text" class="form-control" id="nodeNameInput" placeholder="Image Search">
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-success submit">Search</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- div for displaying pictures  -->
-                <div class="container">
-                    <div class="picSelectModal" input type="image" type="image" src="">
-                        <!-- pictures go here -->
-                    </div>
-                </div>
-                <!-- reset, close and save buttons -->
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary resetModalButton">Reset</button>
-                    <button type="button" class="btn btn-success saveModalButton" data-dismiss="modal">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Modal for sign-in/sign-up-->
     <div class="modal fade" id="signInUpModal" tabindex="-1" role="dialog" aria-labelledby="signInUpModalHeader"
@@ -218,6 +165,8 @@
     <!-- NOTE: IT IS IMPERATIVE WE KEEP THIS IN THE .gitignore -->
     <script src="assets/javascript/secret.js"></script>
 
+    <!-- Include the script that allows us to authorize users -->
+    <script src="assets/javascript/auth.js"></script>
 
     <!-- Include Joint and required dependencies (for graphs) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.js"></script>
@@ -233,14 +182,17 @@
     <!-- Include parsley for form validation-->
     <script src="assets/javascript/parsley.js"></script>
 
+    <!-- NOTE: Not currently using firebase UI 
+            Include Firebase UI, which helps with authentication -->
+    <!--         <script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js"></script>   -->
+
+
     <!-- Include the script that holds the Ruleset and Node data structures -->
     <script src="assets/javascript/graph.js"></script>
 
     <!-- Include the script that visualizes objects -->
     <script src="assets/javascript/layout.js"></script>
 
-    <!-- Include the script that allows us to authorize users -->
-    <script src="assets/javascript/auth.js"></script>
 
 </body>
 
