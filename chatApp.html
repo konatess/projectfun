@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>RPSSL Online</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    </body>
+    </html>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Eagle+Lake|Raleway:600" rel="stylesheet">
+        <link rel="stylesheet" href="assets/css/chatApp.css">
+    </head>
+    <body class="bg-filter">
+        <!-- modal to collect username -->
+        <div class="modal fade" id="usernameModal" tabindex="-1" role="dialog" aria-labelledby="usernameModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header text-dark">
+                        <h5 class="modal-title" id="usernameModalTitle">Please enter a username to get started</h5>
+                    </div>
+                <div class="modal-body">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="username" placeholder="Username" aria-label="Username" aria-describedby="username">
+                        </div>
+                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="username-btn btn btn-dark">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- header -->
+        <header class="text-center p-1"><h1>Hello ! Welcome To The Chat Wall.</h1></header> 
+        <header class="text-center p-1"><h2>We hope that you are enjoying the game.</h2></header> 
+        <!-- main content -->
+        <div class="row w-100">
+            <!-- right half of page -->
+            <div class="col-12 col-md-6"> 
+                <div class="card text-center ml-10 mr-1 border-0 bg-transparent">
+                    <div class="card-body">
+                        <h6 class="card-title">External Links for you.</h6>
+                        <!-- some instructional text -->
+                        <!-- border for visual sizing purposes -->
+                        <div class="mx-5">
+                            <!-- instructional video BBT -->
+                            <div id = "one">
+                                <a id="header" href="https://www.facebook.com"><img src="assets/images/face.png"></a>
+                            </div>
+                            <div id = "two">
+                                    <a id="header" href="https://www.google.com/"><img src="assets/images/google.PNG"></a>
+                                
+                            </div>
+                            <div id = "three">
+                                    <a id="header" href="https://twitter.com/"><img src="assets/images/twitter.PNG"></a>
+
+                            </div>
+                            <div id = "four">
+                                    <a id="header" href="https://www.instagram.com/"><img src="assets/images/instagram.PNG"></a>
+
+                            </div>
+                            
+                        </div>
+                        <!-- more instructional text -->
+                    </div>
+                </div>
+            </div>
+            <!-- left half of page -->
+            <div class="col-12 col-md-6">
+                <div class="card text-center mr-10 ml-1 border-0 bg-transparent">
+                    <div class="card-body">
+                        <h6 class="card-title">Chat with other players online</h6>
+                        <!-- instructional message that changes when an item is selected. Will also update wins/losses here -->
+                        <!-- buttons for playing game -->
+
+                        <!-- game status message -->
+                   
+                        <!-- chat-log box -->
+                        <div class="chat-log border border-dark rounded px-3 d-flex flex-column justify-content-end">    
+                        </div>
+                        <!-- chat input -->
+                        <div class="input-group mt-1">
+                            <input type="text" class="form-control" id="chat-input" placeholder="Type your message here..." aria-label="chat input field" aria-describedby="chat input field">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-dark rounded-right" type="button" id="chat-button">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- footer -->
+        <footer class="text-center p-1">
+            <!-- link to background origin -->
+           copyright.
+        </footer>
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
+        <script src="https://www.gstatic.com/firebasejs/5.4.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/5.4.1/firebase-database.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
+        <script src="assets/javascript/app.js"></script>
+ 
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.4.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.4.1/firebase-database.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
+    <script src="http://cdn.emojidex.com/scripts/javascript/emojidex-client.min.js"></script>
+    <script src="assets/javascript/chatApp.js"></script>
+
+    <a href="index.html" id="nextPage"><button class="nextPageBtn">click here to go back to the Game page.</button></a>
+
+</body>
+
+</html>

@@ -14,11 +14,19 @@ $(".login").on("click", function(){
     //if so, grab the actual inputs
     if(validatedSignInEmail.isValid() && validatedSignInPassword.isValid()) {
         console.log("Attempting to sign in...");
+        //remove any previous error messages...
+        $("#signInError").remove();
+        //now officially grab the email and password and submit to firebase!
         var signInEmail = $("#signInEmail").val().trim(); //TO-DO: consider that this is still not the most secure process!  a malicious person might find a way around parsley
         var signInPassword = $("#signInPassword").val().trim();    
         firebase.auth().signInWithEmailAndPassword(signInEmail, signInPassword).catch(function(error) {
             console.log(error.code);
              console.log(error.message);
+             //oh no, something went wrong!  let the user know to try again by showing an error message
+             var errorDiv = $("<div>");
+             errorDiv.html("<P>" + error.message + "</p>");
+             errorDiv.attr("id", "signInError");
+             $("#signInTab").append(errorDiv);
         });
         return; //and exit the login function, because it worked
     }
