@@ -18,10 +18,12 @@ function drawMobile() {
     newDisplay.addClass('col-12 text-center')
     var tabCount = userRuleset.totalEdges();
     console.log(tabCount)
-    for (var i = 0; i < 8;) {
+    for (var i = 0; i < 8; i++) {
         // add the tabs back in
         $('#step-' + i + '-tab').show();
         $('#step-' + i).show();
+        $('#step-' + i + '-tab').removeClass('active');
+        $('#step-' + i).removeClass('show active');
         // remove the All tab, should only show for web
         if (i === 0){
             $('#step-' + i + '-tab').hide();
@@ -32,10 +34,9 @@ function drawMobile() {
             $('#step-' + i + '-tab').hide();
             $('#step-' + i).hide();
         }
-        i++
     }
-    $('step-1-tab').addClass('active')
-    $('step-1').addClass('show active')
+    $('#step-1-tab').addClass('active');
+    $('#step-1').addClass('show active');
     $('.whole-body').append(newDisplay)
     createMobileNodes();
 }
@@ -80,7 +81,7 @@ function createMobileNodes() {
             itemName = 'click to add name or image'
         }
         var itemImage = userRuleset.getImage(i);
-        var newItem = $('<div class="card bg-light my-1">'); // Add new node container
+        var newItem = $('<div class="card bg-mobileNodes my-1">'); // Add new node container
         newItem.attr('id', 'item-' + i)
         newItem.attr('data-index', i);
         var newItemContent = $('<div class="d-flex flex-row align-items-center"><img src="' + itemImage + '" class="img-thumbnail m-1 width-override">' + '<p class="card-text text-left flex-fill p-2">' + itemName + '</p></div>')
