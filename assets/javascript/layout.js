@@ -335,6 +335,11 @@ $(document).on('click', '.saveModalButton', function() {
 
 
 //LISTENER FOR STEP TABS
+$(".all-steps-tab").on("click", function(){
+    currentTab = 0;
+    determineDisplay(); //display everything if we were on the 'all' tab
+});
+
 $(".step-tab").on("click", function(){
     const selectedStep = parseInt($(this).attr("data-index")); //grab which step we're looking at
     //remove the 'active' from the previous tab...
