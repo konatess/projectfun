@@ -2,9 +2,11 @@
 
 // function to redraw items for each change on screens larger than mobile
 function drawWeb() {
+// first, clear out any graph that may already exist
+    graph.clear();
     createNodes();  // now create the graphical nodes
-    distributeNodesInCircle(); 
-    linkNodes();
+    distributeNodesInCircle(); //distribute them in a circular pattern
+    linkNodes();  //and draw the arrows!
 }
 
 // function to redraw items for each change on mobile size screens
@@ -37,6 +39,7 @@ function drawMobile() {
     createMobileNodes();
 }
 function createNodes() {
+
     items = [];
     //NOTE: when we generate these guys, we need to give them an onclick so they will open an editing modal 
     //and the user can then put in the name and pick an image
@@ -56,6 +59,9 @@ function createNodes() {
             },
             dataindex: {  //NOTE: this 'dataindex' attribute will store the index of the related node in our userRuleset object :)
                 text: i
+            },
+            image: {
+                xlinkHref: userRuleset.getImage(i)
             }
         });
 
@@ -202,7 +208,7 @@ var paper = new joint.dia.Paper({
     interactive: { elementMove: false, arrowheadMove: false }, //makes the items not draggable, arrows not draggable
     gridSize: 1
 });
-
+;
 
 
 //VISUALIZATION: ON-CLICK EVENT FOR INDIVIDUAL ITEMS
@@ -260,8 +266,9 @@ $(".submit").click(function (e) {
             });
         },
         error: function (xhr, status, error) {
-            console.log(xhr)
-            $(".picSelectModal").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+            console.log(xhr + " " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
+            //if an error occurs, give the user a human-readable error message!
+            $(".picSelectModal").html("Oh no, something went wrong!  Please try your search again.");
         }
     });
 });
@@ -328,7 +335,6 @@ $('#item-slider').on('input', function () {
             drawMobile();
         }
         else {
-            graph.clear(); //Clear out our existing visualization...
             drawWeb();
         }
     }
@@ -375,7 +381,6 @@ $('#item-slider').on('input', function () {
                     drawMobile();
                 }
                 else {
-                    graph.clear(); //Clear out our existing visualization...
                     drawWeb();
                 }
                 //and hide the modal
@@ -398,7 +403,6 @@ $('#item-slider').on('input', function () {
                 drawMobile();
             }
             else {
-                graph.clear(); //Clear out our existing visualization...
                 drawWeb();
             }
             
