@@ -150,13 +150,13 @@
                                     <div class="form-group">
                                         <label for="signInEmail">Email address</label>
                                         <input type="email" class="form-control" id="signInEmail" aria-describedby="emailHelp"
-                                            data-parsley-type="email" data-parsley-trigger="input blur focusout"
+                                            data-parsley-type="email" data-parsley-trigger="blur focusout"
                                             placeholder="Enter email" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="signInPassword">Password</label>
                                         <input type="password" class="form-control" id="signInPassword"
-                                            data-parsley-length="[8, 64]" data-parsley-trigger="input blur focusout"
+                                            data-parsley-length="[8, 64]" data-parsley-trigger="blur focusout"
                                             placeholder="Password" required>
                                     </div>
                                 </form>
@@ -168,7 +168,7 @@
                                     <div class="form-group" data-parsley-validate>
                                         <label for="signUpEmail">Email address</label>
                                         <input type="email" class="form-control" id="signUpEmail" aria-describedby="emailHelp"
-                                            data-parsley-type="email" data-parsley-trigger="input blur focusout"
+                                            data-parsley-type="email" data-parsley-trigger="blur focusout"
                                             placeholder="Enter email" required>
                                         <small id="emailHelp" class="form-text text-muted">We'll never share your email
                                             with anyone else.</small>
@@ -176,9 +176,10 @@
                                     <div class="form-group">
                                         <label for="signUpPassword">Password</label>
                                         <input type="password" class="form-control" id="signUpPassword"
-                                            data-parsley-length="[8, 64]" data-parsley-trigger="input blur focusout"
+                                            data-parsley-length="[8, 64]" data-parsley-trigger="blur focusout"
                                             placeholder="Password" required>
                                     </div>
+                                    
                                 </form>
                             </div>
                         </div>
