@@ -486,15 +486,15 @@ $('#item-slider').on('input', function () {
 
 //WHEN THE PAGE LOADS, SHOW A DEFAULT EXAMPLE RULESET 
 //Note: eventually this will only show if you are not logged in / do not have a saved game
-  /*   userRuleset.addNode("Click me to get started!");
+   userRuleset.addNode("Click me to get started!");
     userRuleset.addNode("");
-    userRuleset.addNode(""); */
+    userRuleset.addNode(""); 
 
-    userRuleset.addNode("Rock");
+ /*    userRuleset.addNode("Rock");
     userRuleset.addNode("Spock");
     userRuleset.addNode("Scissors");
     userRuleset.addNode("Lizard");
-    userRuleset.addNode("Paper");
+    userRuleset.addNode("Paper"); */
 
     //determine what display size to show
     determineDisplay();
