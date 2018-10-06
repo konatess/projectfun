@@ -73,6 +73,10 @@ image {
     max-height: 90px !important;
 }
 
+.bg-mobileNodes {
+    background-color: rgba(248, 235, 45, 0.993);
+}
+
 /* By Pushpinder(added css to link and botton for user to go to the chat page */
 #nextPage {
     margin-left: 90%;
