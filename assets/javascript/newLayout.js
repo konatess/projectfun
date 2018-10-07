@@ -280,33 +280,7 @@ $.ready()
         $(".picSelectModal").empty();
     });
 
-    // modal - submit button for the text bar
-    // $(".submit").click(function (e) {
-    //     $(".picSelectModal").html("");
-
-    //     var apiKey = "4cac8681185d926a8cc5a7f2671b3eb5"
-    //     var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?format=json&tags=" + $("#nodeNameInput").val();
-
-    //     $.ajax({
-    //         url: flickerAPI,
-    //         dataType: "jsonp", // jsonp
-    //         jsonpCallback: 'jsonFlickrFeed', // add this property
-    //         success: function (result, status, xhr) {
-    //             $.each(result.items, function (i, item) {
-    //                 $("<img>").attr("src", item.media.m).addClass("img img-thumbnail modalPic").appendTo(".picSelectModal");
-    //                 if (i === 5) {
-    //                     return false;
-    //                 }
-    //             });
-    //         },
-    //         error: function (xhr, status, error) {
-    //             console.log(xhr + " " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
-    //             //if an error occurs, give the user a human-readable error message!
-    //             $(".picSelectModal").html("Oh no, something went wrong!  Please try your search again.");
-    //         }
-    //     });
-    // });
-
+    
 
 function profanityCheck (text) {
 
@@ -355,6 +329,8 @@ function profanityCheck (text) {
         profanityCheck(text);
     });
 
+
+
     //     $(".picSelectModal").html("");
 
     //     // $(".submit").on("click", function () {
@@ -378,7 +354,6 @@ function profanityCheck (text) {
     //                 $("#nodeNameDisplay").val("Naughty words, try again");
     //                 $(".picSelectModal").empty();
     //             } else {
-    //                 var apiKey = "4cac8681185d926a8cc5a7f2671b3eb5"
     //                 var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?format=json&tags=" + $("#nodeNameInput").val();
 
     //                 $.ajax({
@@ -412,7 +387,9 @@ function profanityCheck (text) {
     $(document).on('click', '.saveModalButton', function () {
         nodeName = $('#nodeNameDisplay').val().trim();
         var text = nodeName;
+        console.log(text);
         profanityCheck (text);
+        
         userRuleset.setName(currentItemIndex, nodeName); //this line would set the name in the internal datamodel...
         if (screenSmall) {
             if (source !== "") {
