@@ -280,103 +280,58 @@ $.ready()
         $(".picSelectModal").empty();
     });
 
-    
 
-function profanityCheck (text) {
+    // 
+    // the propfanity checking function for the image and name slection modal for the nodes
+    function profanityCheck(text) {
 
-    var queryURL = "https://www.purgomalum.com/service/containsprofanity?text=" + text;
-    console.log(queryURL);
+        var queryURL = "https://www.purgomalum.com/service/containsprofanity?text=" + text;
+        console.log(queryURL);
 
-    $.ajax({
-        url: queryURL,
-        method: "GET"
-    })
-        .then(function (response) {
-            console.log("purgomalum says: " + response);
-            if (response === "true") {
-                console.log("PROFANITY IS TRUE!  ....  hide the children  :( ");
-                $("#nodeNameInput").val("Naughty words, try again");
-                $("#nodeNameDisplay").val("Naughty words, try again");
-                $(".picSelectModal").empty();
-            } else {            
-                var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?format=json&tags=" + $("#nodeNameInput").val();
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        })
+            .then(function (response) {
+                console.log("purgomalum says: " + response);
+                if (response === "true") {
+                    console.log("PROFANITY IS TRUE!  ....  hide the children  :( ");
+                    $("#nodeNameInput").val("Naughty words, try again");
+                    $("#nodeNameDisplay").val("Naughty words, try again");
+                    $(".picSelectModal").empty();
+                } else {
+                    var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?format=json&tags=" + $("#nodeNameInput").val();
 
-                $.ajax({
-                    url: flickerAPI,
-                    dataType: "jsonp", 
-                    jsonpCallback: 'jsonFlickrFeed', 
-                    success: function (result, status, xhr) {
-                        $.each(result.items, function (i, item) {
-                            $("<img>").attr("src", item.media.m).addClass("img img-thumbnail modalPic").appendTo(".picSelectModal");
-                            if (i === 5) {
-                                return false;
-                            }
-                        });
-                    },
-                    error: function (xhr, status, error) {
-                        console.log(xhr)
-                        $(".picSelectModal").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
-                    }
-                });
-            };
-});
-}
+                    $.ajax({
+                        url: flickerAPI,
+                        dataType: "jsonp",
+                        jsonpCallback: 'jsonFlickrFeed',
+                        success: function (result, status, xhr) {
+                            $.each(result.items, function (i, item) {
+                                $("<img>").attr("src", item.media.m).addClass("img img-thumbnail modalPic").appendTo(".picSelectModal");
+                                if (i === 5) {
+                                    return false;
+                                }
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr)
+                            $(".picSelectModal").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+                        }
+                    });
+                };
+            });
+    }
 
-
+    // 
     // modal - submit button for the image select modal text bar
     $(".submit").click(function () {
-        var text=$("#nodeNameInput").val();
+        var text = $("#nodeNameInput").val();
         profanityCheck(text);
     });
 
-
-
-    //     $(".picSelectModal").html("");
-
-    //     // $(".submit").on("click", function () {
-    //     event.preventDefault();
-    //     var text1 = $("#nodeNameInput").val();
-    //     console.log(text1);
-    //     var text2 = $("#nodeNameDisplay").val();
-    //     console.log(text2);
-    //     var queryURL = "https://www.purgomalum.com/service/containsprofanity?text=" + text1 + " " + text2;
-    //     console.log(queryURL);
-
-    //     $.ajax({
-    //         url: queryURL,
-    //         method: "GET"
-    //     })
-    //         .then(function (response) {
-    //             console.log("purgomalum says: " + response);
-    //             if (response === "true") {
-    //                 console.log("PROFANITY IS TRUE!  ....  hide the children  :( ");
-    //                 $("#nodeNameInput").val("Naughty words, try again");
-    //                 $("#nodeNameDisplay").val("Naughty words, try again");
-    //                 $(".picSelectModal").empty();
-    //             } else {
-    //                 var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?format=json&tags=" + $("#nodeNameInput").val();
-
-    //                 $.ajax({
-    //                     url: flickerAPI,
-    //                     dataType: "jsonp", // jsonp
-    //                     jsonpCallback: 'jsonFlickrFeed', // add this property
-    //                     success: function (result, status, xhr) {
-    //                         $.each(result.items, function (i, item) {
-    //                             $("<img>").attr("src", item.media.m).addClass("img img-thumbnail modalPic").appendTo(".picSelectModal");
-    //                             if (i === 5) {
-    //                                 return false;
-    //                             }
-    //                         });
-    //                     },
-    //                     error: function (xhr, status, error) {
-    //                         console.log(xhr)
-    //                         $(".picSelectModal").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
-    //                     }
-    //                 });
-    //             };
-    //         })
-    // });
-
+    // 
+    // the function that runs when you click on an image to select it
     $(document).on('click', '.modalPic', function () {
         $('.modalPic').removeClass('selected-image');
         $(this).addClass('selected-image');
@@ -384,12 +339,14 @@ function profanityCheck (text) {
         console.log('Picture source: ' + source)
     })
 
+    // 
+    // the function that runs when you click the 'Save' button
     $(document).on('click', '.saveModalButton', function () {
         nodeName = $('#nodeNameDisplay').val().trim();
         var text = nodeName;
         console.log(text);
-        profanityCheck (text);
-        
+        profanityCheck(text);
+
         userRuleset.setName(currentItemIndex, nodeName); //this line would set the name in the internal datamodel...
         if (screenSmall) {
             if (source !== "") {
