@@ -3,7 +3,7 @@ Build your very own game rules for 'rock paper scissors' - and share it with fri
 
 # Features Include:
 * Select a name and image for each item in your game
-* Family-friendly: curse words are NOT allowed
+* Family-friendly: Inappropriate images and profanity are NOT allowed
 * Full visualization (for both mobile and web) 
 * No heavy math required! The game will automatically plot out all the relationships needed; you simply provide the items
 * Email authentication to publish/edit your game
@@ -18,7 +18,8 @@ Build your very own game rules for 'rock paper scissors' - and share it with fri
 * Password reset
 * Load and edit an already published game
 * Save-as-you-go 
-* OFfline caching
+* Offline caching
 * More robust mobile version
 * Select a game to play with a friend
 * Play the selected ruleset with your friend online!
+* Getting the profanity checking to be more fully consistent, no matter which button you press to save your selections
