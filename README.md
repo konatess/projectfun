@@ -23,3 +23,6 @@ Build your very own game rules for 'rock paper scissors' - and share it with fri
 * Select a game to play with a friend
 * Play the selected ruleset with your friend online!
 * Getting the profanity checking to be more fully consistent, no matter which button you press to save your selections
+
+![screen shot 2019-03-01 at 12 25 27 pm](https://user-images.githubusercontent.com/36722674/53664631-dc584000-3c1d-11e9-924d-9d8e3f118f71.png)
+![screen shot 2019-03-01 at 12 29 10 pm](https://user-images.githubusercontent.com/36722674/53664633-dd896d00-3c1d-11e9-8f94-2093412f1dbb.png)
